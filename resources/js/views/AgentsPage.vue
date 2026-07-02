@@ -13,12 +13,12 @@
 
       <div>
         <h1 class="text-2xl font-bold text-gray-900">AI Agents & API</h1>
-        <p class="text-sm text-gray-500 mt-1">Connect external AI agents to your health data via the PostVisit API</p>
+        <p class="text-sm text-gray-500 mt-1">Connect external AI agents to your health data via the DrJSK AfterCare API</p>
       </div>
 
       <!-- API Endpoint Info -->
       <section>
-        <h2 class="text-lg font-semibold text-gray-800 mb-3">PostVisit API</h2>
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">DrJSK AfterCare API</h2>
         <div class="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
           <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
@@ -29,11 +29,11 @@
             <div class="min-w-0 flex-1">
               <p class="text-sm font-medium text-gray-900">Base URL</p>
               <div class="mt-1 flex items-center gap-2">
-                <code class="text-sm bg-gray-100 rounded-lg px-3 py-1.5 text-emerald-700 font-mono">https://api.postvisit.ai/v1/</code>
+                <code class="text-sm bg-gray-100 rounded-lg px-3 py-1.5 text-emerald-700 font-mono">https://api.drjsk.com.au/v1/</code>
                 <button
                   class="text-gray-400 hover:text-emerald-600 transition-colors"
                   title="Copy URL"
-                  @click="copyText('https://api.postvisit.ai/v1/')"
+                  @click="copyText('https://api.drjsk.com.au/v1/')"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -159,7 +159,7 @@
         <h2 class="text-lg font-semibold text-gray-800 mb-3">Connect an AI Agent</h2>
         <div class="bg-white rounded-2xl border border-gray-200 p-5 space-y-5">
           <p class="text-sm text-gray-600">
-            Use the PostVisit API to let AI agents (Claude Code, custom scripts, or any MCP-compatible client) securely query your health data, add observations, and interact with your visit history.
+            Use the DrJSK AfterCare API to let AI agents (Claude Code, custom scripts, or any MCP-compatible client) securely query your health data, add observations, and interact with your visit history.
           </p>
 
           <!-- Step 1: cURL example -->
@@ -169,7 +169,7 @@
               <p class="text-sm font-medium text-gray-900">Test with cURL</p>
             </div>
             <div class="relative group">
-              <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs font-mono overflow-x-auto leading-relaxed"><code>curl -s https://api.postvisit.ai/v1/health/summary \
+              <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs font-mono overflow-x-auto leading-relaxed"><code>curl -s https://api.drjsk.com.au/v1/health/summary \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Accept: application/json" | python3 -m json.tool</code></pre>
               <button
@@ -217,7 +217,7 @@
         <h2 class="text-lg font-semibold text-gray-800 mb-3">MCP Skill Definition</h2>
         <div class="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
           <p class="text-sm text-gray-600">
-            PostVisit exposes itself as an MCP tool with the following skill definition. AI agents use this to understand what capabilities are available.
+            DrJSK AfterCare exposes itself as an MCP tool with the following skill definition. AI agents use this to understand what capabilities are available.
           </p>
           <div class="relative group">
             <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs font-mono overflow-x-auto leading-relaxed"><code>{{ skillDefinitionJson }}</code></pre>
@@ -339,15 +339,15 @@ async function copyText(text: string): Promise<void> {
 }
 
 // --- Code snippets ---
-const curlExample = `curl -s https://api.postvisit.ai/v1/health/summary \\
+const curlExample = `curl -s https://api.drjsk.com.au/v1/health/summary \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Accept: application/json" | python3 -m json.tool`;
 
 const mcpConfigJson = JSON.stringify(
   {
     mcpServers: {
-      postvisit: {
-        url: 'https://api.postvisit.ai/v1/mcp',
+      'drjsk-aftercare': {
+        url: 'https://api.drjsk.com.au/v1/mcp',
         headers: {
           Authorization: 'Bearer YOUR_TOKEN',
         },
@@ -360,8 +360,8 @@ const mcpConfigJson = JSON.stringify(
 
 const skillDefinitionJson = JSON.stringify(
   {
-    name: 'postvisit',
-    description: 'Query and interact with patient health data from PostVisit.ai — visit summaries, medications, lab results, observations, and AI-powered clinical chat.',
+    name: 'drjsk-aftercare',
+    description: 'Query and interact with patient health data from DrJSK AfterCare - visit summaries, medications, lab results, observations, and AI-powered clinical chat.',
     capabilities: [
       {
         name: 'query_health_data',

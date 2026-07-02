@@ -4,7 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**PostVisit.ai** — AI system maintaining clinical visit context, helping patients after leaving the doctor's office. Hackathon project: Built with Opus 4.6 (10-16 Feb 2026).
+**DrJSK AfterCare** - an AI-assisted post-visit care platform for the plastic and
+reconstructive surgery practice of Dr James Southwell-Keely (drjsk.com.au). It helps
+patients through post-operative recovery with plain-English guidance, pre-operative
+checklists, and clear escalation to the practice.
+
+Forked and customised from the PostVisit.ai hackathon prototype (Built with Opus 4.6,
+10-16 Feb 2026) under the MIT Licence. Attalis Capital pilot, tracked in
+Attalis-Capital/attalis-missions#1700.
+
+**Clinical scope note:** this platform gives general post-operative guidance only. It is
+not a substitute for professional medical advice and does not provide emergency care.
+Urgent concerns route to the practice on (02) 9369 2800, with a 000 fallback after hours.
+Wound-photo AI triage is explicitly OUT of scope for this codebase (separate Path B mission).
+
+**Priority procedures:** DIEP flap reconstruction; abdominoplasty / mummy makeover;
+breast reduction / mastopexy.
+
+**Clinical corrections from the surgeon (load-bearing, respect exactly):**
+- Flap colour change is NOT an urgent alert post-discharge (rarely of concern after hospital discharge).
+- Pre-operative checklists are GENERIC editable templates, NOT AI-personalised per patient.
+- Alerts route through the EXISTING practice phone (02) 9369 2800, NOT a separate nurse-triage layer.
+- Risk calculator is out of scope. Wound-photo monitoring is out of scope (Path B).
 
 Key docs: `docs/seed.md` (full spec) · `docs/decisions.md` (decision log) · `docs/lessons.md` (dev lessons) · `docs/KEEP-THINKING.md` (clinical depth) · `docs/licenses.md` (compliance) · `docs/integrations.md` (Linear, Craft APIs)
 
@@ -22,7 +43,7 @@ Key docs: `docs/seed.md` (full spec) · `docs/decisions.md` (decision log) · `d
 - `herd php artisan migrate` — run migrations
 - `./vendor/bin/pint` — fix code style
 - `bun run build` — build frontend · `bun add <package>` — add dependency (NOT npm)
-- Local URL: `postvisit.test`
+- Local URL: `drjsk-aftercare.test`
 
 ## Key Architecture Patterns
 
@@ -34,7 +55,7 @@ Key docs: `docs/seed.md` (full spec) · `docs/decisions.md` (decision log) · `d
 
 ## Git Strategy
 
-- **Direct to main** (hackathon mode, no PRs). Every commit must pass `herd php artisan test` AND `bun run build`.
+- **PR-only** (Attalis pilot). Never push to main; all changes via PR, committed as `anika-attalis` (never shinny77). Every commit must pass `php artisan test` AND the frontend build.
 - **Always rebase before merge**: `git fetch origin main && git rebase FETCH_HEAD`. Without this, merges silently overwrite newer changes.
 - Multi-agent: max 2 parallel, work on separate files, only one merges to main at a time.
 - Worktrees: each needs own `.env` with matching `APP_URL`/`SANCTUM_STATEFUL_DOMAINS`/`DB_DATABASE`.
@@ -94,7 +115,7 @@ Update docs incrementally as you code — documentation is a hackathon judging c
 ## Production Deployment
 
 See `.env.example` for all required variables. Key items:
-`UPLOAD_DISK=s3` · `ANTHROPIC_API_KEY` · `OPENAI_API_KEY` · `APP_URL=https://postvisit.ai` · `SANCTUM_STATEFUL_DOMAINS` · `SESSION_DOMAIN=.postvisit.ai`
+`UPLOAD_DISK=s3`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `APP_URL=https://drjsk.com.au`, `SANCTUM_STATEFUL_DOMAINS`, `SESSION_DOMAIN=.drjsk.com.au`
 
 ===
 

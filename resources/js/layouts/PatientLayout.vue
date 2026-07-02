@@ -33,7 +33,7 @@
       <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <router-link to="/profile" class="flex items-center">
-            <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-7" />
+            <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-7" />
           </router-link>
           <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
             Patient Panel
@@ -245,10 +245,10 @@
       <button
         v-if="!chatOpen"
         class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-emerald-50 hover:bg-emerald-100 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center group"
-        title="Ask PostVisit AI"
+        title="Ask DrJSK AfterCare AI"
         @click="chatOpen = true"
       >
-        <img src="/images/logo-icon.png" alt="PostVisit" class="h-7 w-auto group-hover:scale-110 transition-transform" />
+        <img src="/images/logo-icon.png" alt="DrJSK AfterCare" class="h-7 w-auto group-hover:scale-110 transition-transform" />
         <span class="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full animate-pulse"></span>
       </button>
 
@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
 });
 
 const isDemoUser = computed(() => {
-    return auth.user?.email?.endsWith('@demo.postvisit.ai') ?? false;
+    return auth.user?.email?.endsWith('@demo.drjsk.com.au') ?? false;
 });
 
 // Chat panel top offset: header (64px) + demo banner (40px) if present

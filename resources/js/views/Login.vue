@@ -6,7 +6,7 @@
 
     <div class="w-full max-w-sm relative z-10">
       <div class="text-center mb-8">
-        <router-link to="/" class="inline-block"><img src="/images/logo-full.png" alt="PostVisit.ai" class="h-8 mx-auto" /></router-link>
+        <router-link to="/" class="inline-block"><img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-8 mx-auto" /></router-link>
         <p class="mt-3 text-sm text-gray-400">Your AI-powered medical visit companion</p>
       </div>
 

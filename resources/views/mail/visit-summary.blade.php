@@ -84,13 +84,13 @@
             </div>
 
             <p style="font-size:14px;color:#6b7280;line-height:1.6;">
-                Have questions about your visit? Log in to PostVisit.ai to chat with our AI assistant.
+                Have questions about your visit? Log in to DrJSK AfterCare to chat with our AI assistant.
                 It has your full visit context and can explain medical terms, medications, and your treatment plan.
             </p>
         </div>
 
         <div class="footer">
-            <p>PostVisit.ai &mdash; AI-powered post-visit care</p>
+            <p>DrJSK AfterCare &mdash; AI-powered post-visit care</p>
             <p>This is an automated summary. For medical emergencies, call 911.</p>
         </div>
     </div>

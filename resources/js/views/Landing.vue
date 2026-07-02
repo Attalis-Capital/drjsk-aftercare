@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-emerald-50 to-white px-4">
     <div class="text-center max-w-2xl">
       <div class="flex justify-center mb-4">
-        <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-14" />
+        <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-14" />
       </div>
       <p class="text-xl text-gray-600 mb-2">
         The bridge between your visit and your health.
@@ -42,7 +42,7 @@
 
     <footer class="mt-16 text-center max-w-md">
       <p class="text-xs text-gray-400">
-        PostVisit.ai helps you understand and act on your doctor's recommendations. It is not a substitute for professional medical judgment.
+        DrJSK AfterCare helps you understand and act on your doctor's recommendations. It is not a substitute for professional medical judgment.
       </p>
       <p class="mt-3 text-[11px] text-gray-400">
         Built by <a href="https://nedoszytko.com" target="_blank" rel="noopener" class="underline hover:text-gray-600 transition-colors">Michal Nedoszytko</a>

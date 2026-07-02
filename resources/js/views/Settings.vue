@@ -233,7 +233,7 @@ const auditLogs = [
     timestamp: '2026-02-11 14:30',
     action: 'AI Analysis',
     actionType: 'ai',
-    actor: 'PostVisit AI',
+    actor: 'DrJSK AfterCare AI',
     details: 'Completed analysis of uploaded ECG document',
   },
   {
@@ -261,7 +261,7 @@ const auditLogs = [
     timestamp: '2026-02-09 08:30',
     action: 'AI Analysis',
     actionType: 'ai',
-    actor: 'PostVisit AI',
+    actor: 'DrJSK AfterCare AI',
     details: 'Generated term explanations for lab results panel',
   },
   {

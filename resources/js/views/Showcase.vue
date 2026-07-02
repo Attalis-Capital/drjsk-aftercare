@@ -3,7 +3,7 @@
 
     <!-- Logo -->
     <div class="showcase-item" style="--delay: 0">
-      <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-12 mb-2" />
+      <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-12 mb-2" />
     </div>
 
     <!-- Tagline -->

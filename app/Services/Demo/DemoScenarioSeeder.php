@@ -513,7 +513,7 @@ class DemoScenarioSeeder
             [
                 'fhir_patient_id' => 'patient-'.Str::uuid(),
                 'gender' => $data['gender'],
-                'email' => "{$namePart}@demo.postvisit.ai",
+                'email' => "{$namePart}@demo.drjsk.com.au",
                 'phone' => $data['phone'],
                 'preferred_language' => $data['preferred_language'],
                 'timezone' => $data['timezone'],
@@ -538,7 +538,7 @@ class DemoScenarioSeeder
 
         return User::create([
             'name' => $patient->first_name.' '.$patient->last_name,
-            'email' => "{$namePart}.{$scenarioKey}@demo.postvisit.ai",
+            'email' => "{$namePart}.{$scenarioKey}@demo.drjsk.com.au",
             'password' => 'password',
             'role' => 'patient',
             'patient_id' => $patient->id,

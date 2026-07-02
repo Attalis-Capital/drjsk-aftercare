@@ -4,7 +4,7 @@
     <header class="bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-40">
       <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
         <router-link to="/" class="flex items-center">
-          <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-7" />
+          <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-7" />
         </router-link>
         <span class="text-xs font-medium bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
           Demo Mode
@@ -14,9 +14,9 @@
 
     <!-- Welcome -->
     <div v-if="step === 'welcome'" class="max-w-lg mx-auto px-4 py-16 text-center space-y-8">
-      <h1 class="text-3xl font-bold text-gray-900">Experience PostVisit.ai</h1>
+      <h1 class="text-3xl font-bold text-gray-900">Experience DrJSK AfterCare</h1>
       <p class="text-gray-600">
-        See how PostVisit.ai works with a simulated cardiology visit.
+        See how DrJSK AfterCare works with a simulated cardiology visit.
       </p>
 
       <div class="space-y-4">

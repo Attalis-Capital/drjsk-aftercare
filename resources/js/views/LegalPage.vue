@@ -5,10 +5,10 @@
       <div class="mb-8">
         <router-link to="/" class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium mb-6">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-          Back to PostVisit.ai
+          Back to DrJSK AfterCare
         </router-link>
         <div class="flex items-center gap-3 mb-2">
-          <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-8" />
+          <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-8" />
         </div>
         <h1 class="text-3xl font-bold text-gray-900 mt-4">{{ title }}</h1>
         <p class="text-sm text-gray-400 mt-1">Last updated: February 16, 2026</p>
@@ -18,7 +18,7 @@
       <div v-if="page === 'privacy'" class="prose prose-gray max-w-none space-y-6">
         <section>
           <h2 class="text-xl font-semibold text-gray-900">1. Overview</h2>
-          <p class="text-gray-600 leading-relaxed">PostVisit.ai is an AI-powered post-visit companion designed to help patients understand, remember, and act on their healthcare visits. This Privacy Policy describes how we collect, use, and protect your information.</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is an AI-powered post-visit companion designed to help patients understand, remember, and act on their healthcare visits. This Privacy Policy describes how we collect, use, and protect your information.</p>
         </section>
 
         <section>
@@ -61,7 +61,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">8. Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:privacy@postvisit.ai" class="text-emerald-600 hover:text-emerald-700 underline">privacy@postvisit.ai</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:privacy@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">privacy@drjsk.com.au</a>.</p>
         </section>
       </div>
 
@@ -69,18 +69,18 @@
       <div v-else-if="page === 'terms'" class="prose prose-gray max-w-none space-y-6">
         <section>
           <h2 class="text-xl font-semibold text-gray-900">1. Acceptance of Terms</h2>
-          <p class="text-gray-600 leading-relaxed">By accessing or using PostVisit.ai, you agree to be bound by these Terms of Use. If you do not agree, please do not use the service.</p>
+          <p class="text-gray-600 leading-relaxed">By accessing or using DrJSK AfterCare, you agree to be bound by these Terms of Use. If you do not agree, please do not use the service.</p>
         </section>
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">2. Service Description</h2>
-          <p class="text-gray-600 leading-relaxed">PostVisit.ai is an AI-powered health companion that helps patients understand their medical visits through automated transcription, plain-language summaries, medication information, and interactive Q&A.</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is an AI-powered health companion that helps patients understand their medical visits through automated transcription, plain-language summaries, medication information, and interactive Q&A.</p>
         </section>
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">3. Medical Disclaimer</h2>
           <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-amber-800">
-            <p class="font-semibold">PostVisit.ai is not a substitute for professional medical advice.</p>
+            <p class="font-semibold">DrJSK AfterCare is not a substitute for professional medical advice.</p>
             <p class="mt-2 text-sm">AI-generated summaries and explanations are for informational purposes only. Always consult your healthcare provider for medical decisions. Do not disregard professional medical advice based on information from this service.</p>
           </div>
         </section>
@@ -107,7 +107,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">7. Limitation of Liability</h2>
-          <p class="text-gray-600 leading-relaxed">PostVisit.ai is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. This is a prototype developed for the Anthropic Hackathon (February 2026).</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. This is a prototype developed for the Anthropic Hackathon (February 2026).</p>
         </section>
       </div>
 
@@ -115,7 +115,7 @@
       <div v-else-if="page === 'legal'" class="prose prose-gray max-w-none space-y-6">
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Project Information</h2>
-          <p class="text-gray-600 leading-relaxed">PostVisit.ai is a prototype application developed for the Anthropic Hackathon (Build with Claude, February 10-16, 2026). It demonstrates the potential of AI-assisted post-visit patient care.</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is a prototype application developed for the Anthropic Hackathon (Build with Claude, February 10-16, 2026). It demonstrates the potential of AI-assisted post-visit patient care.</p>
         </section>
 
         <section>
@@ -144,7 +144,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For questions about PostVisit.ai, please contact <a href="mailto:hello@postvisit.ai" class="text-emerald-600 hover:text-emerald-700 underline">hello@postvisit.ai</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For questions about DrJSK AfterCare, please contact <a href="mailto:hello@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">hello@drjsk.com.au</a>.</p>
         </section>
       </div>
 
