@@ -33,7 +33,7 @@
         </div>
         <div class="bg-gray-50 rounded-xl p-3 text-center">
           <p class="text-2xl font-bold text-gray-900">{{ deviceData.irregular_rhythm_events.length }}</p>
-          <p class="text-xs text-gray-500 mt-1">PVC Events (7d)</p>
+          <p class="text-xs text-gray-500 mt-1">Irregular Beats (7d)</p>
         </div>
         <div class="bg-gray-50 rounded-xl p-3 text-center">
           <p class="text-2xl font-bold text-gray-900">{{ todaySteps }}</p>

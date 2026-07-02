@@ -227,7 +227,7 @@ const auditLogs = [
     action: 'Viewed',
     actionType: 'view',
     actor: 'Dr. Moreau',
-    details: 'Accessed SOAP note for cardiology follow-up visit',
+    details: 'Accessed SOAP note for post-operative follow-up visit',
   },
   {
     timestamp: '2026-02-11 14:30',
@@ -269,7 +269,7 @@ const auditLogs = [
     action: 'Shared',
     actionType: 'share',
     actor: 'Dr. Moreau',
-    details: 'Shared visit notes with referring cardiologist',
+    details: 'Shared visit notes with referring general practitioner',
   },
 ];
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\MedicalLookupController;
 use App\Http\Controllers\Api\MedicationController;
 use App\Http\Controllers\Api\ObservationController;
 use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\PreopChecklistController;
 use App\Http\Controllers\Api\PrescriptionController;
 use App\Http\Controllers\Api\ReferenceController;
 use App\Http\Controllers\Api\SettingsController;
@@ -170,6 +171,9 @@ Route::prefix('v1')->group(function () {
             Route::post('messages/{message}/reply', [DoctorController::class, 'reply']);
             Route::post('messages/{message}/inquire', [DoctorController::class, 'inquire'])->middleware(['ai.budget', 'throttle:ai-expensive']);
             Route::post('patients/{patient}/quick-action', [DoctorController::class, 'quickAction']);
+
+            // Pre-operative checklist admin editor (generic templates, not patient data)
+            Route::put('preop-checklists/{procedure}', [PreopChecklistController::class, 'update']);
         });
 
         // ----- Module 8: Audit (doctor/admin role required) -----
@@ -220,5 +224,13 @@ Route::prefix('v1')->group(function () {
         Route::get('scenarios/{scenario}/photo', [DemoScenarioController::class, 'photo']);
         Route::get('scenarios/{scenario}/animation', [DemoScenarioController::class, 'animation']);
         Route::get('doctors/{practitionerKey}/photo', [DemoScenarioController::class, 'doctorPhoto']);
+    });
+
+    // -------------------------------------------------------
+    // Pre-operative checklists (generic editable templates, read-only for patients)
+    // -------------------------------------------------------
+    Route::prefix('preop-checklists')->group(function () {
+        Route::get('/', [PreopChecklistController::class, 'index']);
+        Route::get('{procedure}', [PreopChecklistController::class, 'show']);
     });
 });

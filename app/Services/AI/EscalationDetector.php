@@ -6,14 +6,39 @@ use App\Models\Visit;
 
 class EscalationDetector
 {
+    // Surgeon-confirmed URGENT triggers for the plastic/reconstructive surgery
+    // pilot are the authoritative source of truth in prompts/escalation-detector.md.
+    // The executed keyword path below MUST cover all five; the prompt-vs-code
+    // consistency is asserted by EscalationDetectorTest (mission #1708).
+    //
+    // Surgeon URGENT triggers and the keyword groups that cover them:
+    //   1. breathing difficulty / chest pain (possible PE)
+    //   2. sudden severe swelling or pressure at the surgical site (haematoma)
+    //   3. fever above 38.5C
+    //   4. uncontrolled bleeding
+    //   5. wound opening or separation (dehiscence)
     private const CRITICAL_KEYWORDS = [
+        // Trigger 1: breathing difficulty / chest pain (possible pulmonary embolism)
         'chest pain', 'chest pressure', 'chest tightness',
         'can\'t breathe', 'cannot breathe', 'difficulty breathing', 'shortness of breath',
+        // Trigger 2: sudden severe swelling or pressure at the surgical site (haematoma)
+        'severe swelling', 'sudden swelling', 'severe pressure', 'haematoma', 'hematoma',
+        'swelling at the site', 'swelling at the surgical site', 'tight and swollen',
+        // Trigger 3: fever above 38.5C (patients phrase this many ways; also see fever check below)
+        'fever', 'high temperature', 'temperature of 39', 'temperature of 40',
+        '38.5', '38.6', '38.7', '38.8', '38.9', '39 degrees', '40 degrees',
+        // Trigger 4: uncontrolled bleeding
+        'severe bleeding', 'uncontrolled bleeding', 'won\'t stop bleeding', 'will not stop bleeding',
+        'bleeding heavily', 'soaking through',
+        // Trigger 5: wound opening or separation (dehiscence)
+        'wound opening', 'wound has opened', 'wound is opening', 'wound separation',
+        'wound has separated', 'wound splitting', 'stitches came apart', 'incision opened',
+        'dehiscence',
+        // Other inherited critical triggers (general emergency)
         'worst headache', 'sudden headache',
         'passed out', 'fainted', 'lost consciousness', 'blacked out',
         'suicidal', 'kill myself', 'end my life', 'self-harm', 'hurt myself',
         'throat swelling', 'can\'t swallow', 'face drooping', 'arm weakness',
-        'severe bleeding', 'uncontrolled bleeding',
         'vision loss', 'can\'t see', 'sudden blindness',
     ];
 
@@ -65,7 +90,7 @@ class EscalationDetector
                     'severity' => 'critical',
                     'reason' => "Message contains critical symptom: '{$keyword}'",
                     'trigger_phrases' => [$keyword],
-                    'recommended_action' => 'This sounds like it could be urgent. Please contact your doctor immediately or call emergency services (911). Do not wait.',
+                    'recommended_action' => 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.',
                     'context_factors' => [],
                 ];
             }

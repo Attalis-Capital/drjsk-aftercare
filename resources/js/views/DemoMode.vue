@@ -16,7 +16,7 @@
     <div v-if="step === 'welcome'" class="max-w-lg mx-auto px-4 py-16 text-center space-y-8">
       <h1 class="text-3xl font-bold text-gray-900">Experience DrJSK AfterCare</h1>
       <p class="text-gray-600">
-        See how DrJSK AfterCare works with a simulated cardiology visit.
+        See how DrJSK AfterCare works with a simulated plastic surgery recovery.
       </p>
 
       <div class="space-y-4">
@@ -45,8 +45,8 @@
     <!-- Demo visit loaded -->
     <div v-else-if="step === 'loaded'" class="max-w-lg mx-auto px-4 py-16 text-center space-y-4">
       <p class="text-emerald-600 font-medium">Demo visit ready</p>
-      <h2 class="text-2xl font-bold text-gray-900">Cardiology Visit — PVCs</h2>
-      <p class="text-gray-500">Propranolol 40mg 2x/day, with full visit context</p>
+      <h2 class="text-2xl font-bold text-gray-900">DIEP Flap Reconstruction Recovery</h2>
+      <p class="text-gray-500">Post-operative recovery plan with full visit context</p>
       <router-link
         :to="`/visits/${demoVisitId}`"
         class="block w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors"

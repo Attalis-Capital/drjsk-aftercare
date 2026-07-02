@@ -1,0 +1,64 @@
+{
+  "history_of_present_illness": [
+    {
+      "term": "mastopexy",
+      "start": 79,
+      "end": 88,
+      "definition": "A breast lift - reshaping and raising the breast tissue and repositioning the nipple higher."
+    },
+    {
+      "term": "hypertrophy",
+      "start": 125,
+      "end": 136,
+      "definition": "Overly large breasts, which can cause neck, shoulder, and back pain."
+    },
+    {
+      "term": "nipple-areola complex",
+      "start": 173,
+      "end": 194,
+      "definition": "The nipple and the coloured skin around it, kept on its own blood supply and moved higher during a lift."
+    }
+  ],
+  "physical_exam": [
+    {
+      "term": "Anchor-pattern",
+      "start": 127,
+      "end": 141,
+      "definition": "The scar shape from a breast reduction - around the areola, straight down, and along the breast fold."
+    },
+    {
+      "term": "perfused",
+      "start": 328,
+      "end": 336,
+      "definition": "Means blood is flowing well through the tissue. A well-perfused nipple is a healthy sign."
+    },
+    {
+      "term": "haematoma",
+      "start": 429,
+      "end": 438,
+      "definition": "A collection of blood under the skin. Sudden severe swelling or pressure at a wound can signal this and needs urgent review."
+    }
+  ],
+  "assessment": [
+    {
+      "term": "dehiscence",
+      "start": 190,
+      "end": 200,
+      "definition": "When a wound edge starts to open or separate. This is one of the signs to report to the practice."
+    }
+  ],
+  "plan": [
+    {
+      "term": "cephalexin",
+      "start": 12,
+      "end": 22,
+      "definition": "An antibiotic given for a short course after surgery to help prevent wound infection."
+    },
+    {
+      "term": "paracetamol",
+      "start": 97,
+      "end": 108,
+      "definition": "A regular pain reliever (Panadol). Taking it around the clock keeps pain steady and reduces the need for stronger medicine."
+    }
+  ]
+}

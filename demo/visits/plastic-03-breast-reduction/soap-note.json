@@ -1,0 +1,17 @@
+{
+  "speakers": {
+    "doctor": "Dr James Southwell-Keely",
+    "patient": "Priya Ramanathan"
+  },
+  "soap_note": {
+    "chief_complaint": "Day 3 review after a breast reduction with mastopexy (breast lift).",
+    "history_of_present_illness": "Ms Ramanathan is a 31-year-old woman who had a bilateral breast reduction with mastopexy 3 days ago for long-standing breast hypertrophy causing neck and shoulder pain. The nipple-areola complex was preserved on its blood supply and repositioned higher on each breast.\n\nShe reports both breasts feel swollen and tight but comfortable, with the expected anchor-shaped dressings in place. Pain is well controlled with regular paracetamol; she avoids codeine due to nausea and uses oxycodone occasionally. There were no drains used.\n\nShe has no fevers, no breathing difficulty, and no chest pain. She is wearing the supportive surgical bra day and night.",
+    "review_of_systems": "Constitutional: No fever, no chills. Mild fatigue.\nCardiovascular: No chest pain, no palpitations.\nRespiratory: No breathing difficulty, no cough.\nSurgical site: Both breasts swollen and bruised as expected; mild tightness; no active bleeding through dressings.\nNeurological: Some altered sensation around the nipples, which is expected and often improves over months.",
+    "physical_exam": "General: Comfortable, mobilising well, no acute distress. Temperature 36.7C, HR 72, BP 120/76, SpO2 99% on room air.\n\nBreasts: Anchor-pattern incisions (around the areola, vertically down, and along the fold) clean and intact bilaterally, no discharge, no separation. Nipple-areola complex on both sides is pink, warm, and well perfused with brisk capillary refill. Expected swelling and bruising, no tense swelling to suggest a haematoma. Dressings clean and dry. Supportive bra in place.",
+    "assessment": "Uncomplicated day 3 recovery following bilateral breast reduction with mastopexy. Both nipple-areola complexes healthy and well perfused. Wounds healing appropriately, no sign of infection, dehiscence, or haematoma.",
+    "plan": "1. Continue cephalexin to complete the 5-day prophylactic antibiotic course.\n2. Continue regular paracetamol; use oxycodone only for breakthrough pain and wean as comfort allows. Avoid codeine due to nausea.\n3. Wear the supportive surgical bra day and night for 6 weeks; no underwire bras.\n4. Keep the dressings clean and dry; leave them intact until the wound check.\n5. No heavy lifting, no strenuous arm or chest exercise, and no driving for now; keep gently mobile to reduce clot risk.\n6. Watch for and report urgent signs: breathing difficulty or chest pain, sudden severe swelling or pressure at a wound, fever above 38.5C, uncontrolled bleeding, or a wound opening. Some altered sensation and colour change around the nipples at home settles with time and is not urgent on its own.\n7. Review in the rooms in 1 week, sooner if concerned.",
+    "follow_up": "Review in 1 week for wound check. Contact the practice on (02) 9369 2800 sooner if concerned.",
+    "current_medications": "- Cephalexin 500mg three times daily (finishing the 5-day prophylactic course)\n- Paracetamol 1000mg four times daily (regular pain relief)\n- Oxycodone 5mg as needed for breakthrough pain"
+  },
+  "unclear_sections": []
+}

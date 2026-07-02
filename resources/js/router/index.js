@@ -144,6 +144,12 @@ const routes = [
         meta: { requiresAuth: true, role: 'doctor' },
     },
     {
+        path: '/doctor/preop-checklists',
+        name: 'preop-checklist-admin',
+        component: () => import('@/views/PreopChecklistAdmin.vue'),
+        meta: { requiresAuth: true, role: 'doctor' },
+    },
+    {
         path: '/settings',
         name: 'settings',
         component: () => import('@/views/Settings.vue'),
@@ -163,6 +169,12 @@ const routes = [
         path: '/library',
         name: 'medical-library',
         component: () => import('@/views/MedicalLibrary.vue'),
+        meta: { requiresAuth: true, role: 'patient' },
+    },
+    {
+        path: '/preop-checklist',
+        name: 'preop-checklist',
+        component: () => import('@/views/PreopChecklist.vue'),
         meta: { requiresAuth: true, role: 'patient' },
     },
     {

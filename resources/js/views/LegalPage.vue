@@ -11,7 +11,7 @@
           <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-8" />
         </div>
         <h1 class="text-3xl font-bold text-gray-900 mt-4">{{ title }}</h1>
-        <p class="text-sm text-gray-400 mt-1">Last updated: February 16, 2026</p>
+        <p class="text-sm text-gray-400 mt-1">Last updated: July 2, 2026</p>
       </div>
 
       <!-- Privacy Policy -->
@@ -56,12 +56,12 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">7. Your Rights</h2>
-          <p class="text-gray-600 leading-relaxed">As a hackathon prototype, full data rights management (export, correction, deletion) is not yet implemented. You can withdraw consent for audio recording at any time by stopping the Companion Scribe session. For data-related requests, contact us directly.</p>
+          <p class="text-gray-600 leading-relaxed">During this pilot, full data rights management (export, correction, deletion) is not yet implemented. You can withdraw consent for audio recording at any time by stopping the Companion Scribe session. For data-related requests, contact us directly.</p>
         </section>
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">8. Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:privacy@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">privacy@drjsk.com.au</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:info@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">info@drjsk.com.au</a>.</p>
         </section>
       </div>
 
@@ -107,7 +107,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">7. Limitation of Liability</h2>
-          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. This is a prototype developed for the Anthropic Hackathon (February 2026).</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. DrJSK AfterCare is a clinical pilot for the practice of Dr James Southwell-Keely, derived under the MIT License from the PostVisit.ai hackathon prototype (Built with Opus 4.6, February 2026).</p>
         </section>
       </div>
 
@@ -115,7 +115,7 @@
       <div v-else-if="page === 'legal'" class="prose prose-gray max-w-none space-y-6">
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Project Information</h2>
-          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is a prototype application developed for the Anthropic Hackathon (Build with Claude, February 10-16, 2026). It demonstrates the potential of AI-assisted post-visit patient care.</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is a clinical pilot for the practice of Dr James Southwell-Keely (drjsk.com.au), providing AI-assisted post-operative patient care. It is derived under the MIT License from the PostVisit.ai hackathon prototype (Built with Opus 4.6, February 2026), consistent with the LICENSE NOTICE included with this software.</p>
         </section>
 
         <section>
@@ -144,7 +144,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For questions about DrJSK AfterCare, please contact <a href="mailto:hello@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">hello@drjsk.com.au</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For questions about DrJSK AfterCare, please contact <a href="mailto:info@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">info@drjsk.com.au</a>.</p>
         </section>
       </div>
 

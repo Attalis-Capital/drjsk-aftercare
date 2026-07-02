@@ -17,8 +17,8 @@
           Dr
         </div>
         <div>
-          <p class="font-semibold text-gray-900">Your Doctor</p>
-          <p class="text-sm text-gray-500">Cardiology</p>
+          <p class="font-semibold text-gray-900">Your Surgeon</p>
+          <p class="text-sm text-gray-500">Plastic and Reconstructive Surgery</p>
         </div>
       </div>
 

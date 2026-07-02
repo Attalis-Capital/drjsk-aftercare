@@ -1,0 +1,17 @@
+{
+  "speakers": {
+    "doctor": "Dr James Southwell-Keely",
+    "patient": "Sophie Marchetti"
+  },
+  "soap_note": {
+    "chief_complaint": "Day 4 review after an abdominoplasty (tummy tuck) as part of a mummy makeover.",
+    "history_of_present_illness": "Ms Marchetti is a 37-year-old woman who had an abdominoplasty 4 days ago to address excess lower abdominal skin and separation of the abdominal muscles (rectus diastasis) after pregnancy. The muscle repair was done at the same time.\n\nShe reports moderate tightness across the lower abdomen and finds it more comfortable to stand and walk slightly bent forward, which is expected and protects the repair. Pain is controlled with regular paracetamol and occasional oxycodone. She has two drains in place and is recording the output as shown by the nurse.\n\nShe has no fevers, no breathing difficulty, and no chest pain. She is wearing her compression garment as instructed.",
+    "review_of_systems": "Constitutional: No fever, no chills. Mild fatigue.\nCardiovascular: No chest pain, no palpitations.\nRespiratory: No breathing difficulty, no cough.\nSurgical site: Mild expected swelling and bruising across the lower abdomen; tightness with movement; small amount of clear-pink drain fluid.\nNeurological: Numbness across the lower abdominal skin, which is expected and usually improves over months.",
+    "physical_exam": "General: Comfortable at rest, mobilising slowly in a slightly flexed posture, no acute distress. Temperature 36.9C, HR 76, BP 118/74, SpO2 99% on room air.\n\nAbdomen: Incision runs low across the lower abdomen and around the reshaped umbilicus (belly button). Incision lines clean and intact, no discharge, no separation. Mild bruising and expected swelling. No tense swelling to suggest a haematoma. Two drains in situ with low, clear-pink output. Compression garment in place. Dressings clean and dry.",
+    "assessment": "Uncomplicated day 4 recovery following abdominoplasty with rectus muscle repair. Wound healing appropriately, no sign of infection, dehiscence, haematoma, or seroma. Expected transient rise in inflammatory markers, being monitored.",
+    "plan": "1. Continue cephalexin to complete the 5-day prophylactic antibiotic course.\n2. Continue regular paracetamol; use oxycodone only for breakthrough pain and wean as comfort allows.\n3. Continue daily enoxaparin injections for clot prevention while mobility is reduced; keep gently walking.\n4. Keep both drains in place and record output; the practice nurse will remove them once output is low enough.\n5. Wear the compression garment day and night for 6 weeks, removing only to shower once cleared.\n6. Maintain a slightly bent posture when standing and walking for the first 1-2 weeks to protect the muscle repair; no heavy lifting, straining, or driving for now.\n7. Watch for and report urgent signs: breathing difficulty or chest pain, sudden severe swelling or pressure at the wound, fever above 38.5C, uncontrolled bleeding, or a wound opening.\n8. Review in the rooms in 1 week, sooner if concerned.",
+    "follow_up": "Review in 1 week for wound and drain check. Contact the practice on (02) 9369 2800 sooner if concerned.",
+    "current_medications": "- Cephalexin 500mg three times daily (finishing the 5-day prophylactic course)\n- Paracetamol 1000mg four times daily (regular pain relief)\n- Oxycodone 5mg as needed for breakthrough pain\n- Enoxaparin 40mg once daily by injection (clot prevention)"
+  },
+  "unclear_sections": []
+}

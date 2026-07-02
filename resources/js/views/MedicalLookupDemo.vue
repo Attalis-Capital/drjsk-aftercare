@@ -13,7 +13,7 @@
       <LookupCard
         title="Conditions (ICD-10)"
         description="Search diagnoses and conditions by name or ICD-10 code"
-        placeholder="e.g. hypertension, diabetes, I49.3..."
+        placeholder="e.g. seroma, haematoma, T81.4..."
         :loading="conditions.loading"
         :error="conditions.error"
         v-model="conditions.query"
@@ -38,7 +38,7 @@
       <LookupCard
         title="Drugs (RxTerms)"
         description="Search drug names with autocompletion from NLM RxTerms"
-        placeholder="e.g. propranolol, metformin, atorvastatin..."
+        placeholder="e.g. cephalexin, paracetamol, enoxaparin..."
         :loading="drugs.loading"
         :error="drugs.error"
         v-model="drugs.query"
@@ -83,7 +83,7 @@
       <LookupCard
         title="Drug Label (DailyMed)"
         description="Get official FDA drug label information from DailyMed"
-        placeholder="e.g. propranolol, ibuprofen, lisinopril..."
+        placeholder="e.g. cephalexin, ibuprofen, paracetamol..."
         param-name="drug_name"
         :loading="drugLabel.loading"
         :error="drugLabel.error"
