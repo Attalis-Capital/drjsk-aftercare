@@ -102,7 +102,7 @@ class UploadTokenTest extends TestCase
 
         $response->assertOk()
             ->assertViewIs('upload')
-            ->assertSee('PostVisit');
+            ->assertSee('DrJSK');
     }
 
     public function test_mobile_upload_page_returns_410_for_expired_token(): void
