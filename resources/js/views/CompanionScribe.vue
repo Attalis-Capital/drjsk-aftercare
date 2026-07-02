@@ -69,7 +69,7 @@
           :disabled="demoLoading"
           @click="useDemoTranscript"
         >
-          {{ demoLoading ? 'Creating demo visit...' : 'Use Demo Recording (26 min cardiology visit)' }}
+          {{ demoLoading ? 'Creating demo visit...' : 'Use Demo Recording (post-operative review)' }}
         </button>
         <p v-if="error" class="text-red-600 text-sm">{{ error }}</p>
       </div>

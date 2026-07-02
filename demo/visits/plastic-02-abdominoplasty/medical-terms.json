@@ -1,0 +1,76 @@
+{
+  "history_of_present_illness": [
+    {
+      "term": "abdominoplasty",
+      "start": 47,
+      "end": 61,
+      "definition": "A tummy tuck - surgery that removes excess lower abdominal skin and tightens the abdominal wall."
+    },
+    {
+      "term": "rectus diastasis",
+      "start": 153,
+      "end": 169,
+      "definition": "Separation of the two main tummy muscles, often after pregnancy. It is repaired during a tummy tuck."
+    },
+    {
+      "term": "drains",
+      "start": 486,
+      "end": 492,
+      "definition": "Soft tubes that let extra fluid drain from the wound while it heals. The nurse removes them once output is low."
+    }
+  ],
+  "physical_exam": [
+    {
+      "term": "umbilicus",
+      "start": 233,
+      "end": 242,
+      "definition": "The belly button, which is reshaped and repositioned during a tummy tuck."
+    },
+    {
+      "term": "haematoma",
+      "start": 389,
+      "end": 398,
+      "definition": "A collection of blood under the skin. Sudden severe swelling or pressure at the wound can signal this and needs urgent review."
+    },
+    {
+      "term": "drains",
+      "start": 404,
+      "end": 410,
+      "definition": "Soft tubes draining fluid from the wound. Recording the output helps decide when they can come out."
+    }
+  ],
+  "assessment": [
+    {
+      "term": "dehiscence",
+      "start": 132,
+      "end": 142,
+      "definition": "When a wound edge starts to open or separate. This is one of the signs to report to the practice."
+    },
+    {
+      "term": "seroma",
+      "start": 158,
+      "end": 164,
+      "definition": "A pocket of clear fluid that can gather under a healing wound. Compression garments help reduce it."
+    }
+  ],
+  "plan": [
+    {
+      "term": "cephalexin",
+      "start": 12,
+      "end": 22,
+      "definition": "An antibiotic given for a short course after surgery to help prevent wound infection."
+    },
+    {
+      "term": "enoxaparin",
+      "start": 197,
+      "end": 207,
+      "definition": "A blood-thinning injection that lowers the risk of clots (DVT) while you are less mobile."
+    },
+    {
+      "term": "compression garment",
+      "start": 410,
+      "end": 429,
+      "definition": "A firm supportive garment worn day and night. It reduces swelling and supports the healing tissues."
+    }
+  ]
+}

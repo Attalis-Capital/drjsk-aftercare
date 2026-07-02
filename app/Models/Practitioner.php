@@ -40,13 +40,11 @@ class Practitioner extends Model
      */
     public function getPhotoUrlAttribute(): ?string
     {
-        // Map demo doctor emails to photo directory keys
+        // Map demo doctor emails to photo directory keys.
+        // Single-surgeon practice: all demo scenarios map to Dr James Southwell-Keely.
         $emailMap = [
             'doctor@demo.drjsk.com.au' => 'default',
-            'dr.patel@demo.drjsk.com.au' => 'endocrinologist',
-            'dr.chen@demo.drjsk.com.au' => 'gastroenterologist',
-            'dr.okafor@demo.drjsk.com.au' => 'pulmonologist',
-            'dr.sarah.chen@demo.drjsk.com.au' => 'cardiologist-chen',
+            'dr.southwell-keely@demo.drjsk.com.au' => 'default',
         ];
 
         $key = $emailMap[$this->email] ?? null;

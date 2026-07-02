@@ -1,0 +1,172 @@
+{
+  "demographics": {
+    "first_name": "Helen",
+    "last_name": "Whitfield",
+    "dob": "1972-05-08",
+    "gender": "female",
+    "height_cm": 165.0,
+    "weight_kg": 68.0,
+    "bmi": 25.0,
+    "blood_type": "O+",
+    "email": "helen.whitfield@demo.drjsk.com.au",
+    "phone": "+61 412 555 101",
+    "mrn": "DEMO-P01",
+    "preferred_language": "en"
+  },
+  "emergency_contact": {
+    "name": "David Whitfield",
+    "relationship": "Husband",
+    "phone": "+61 412 555 102"
+  },
+  "allergies": [
+    {
+      "name": "Penicillin",
+      "severity": "moderate",
+      "reaction": "Skin rash"
+    }
+  ],
+  "conditions": [
+    {
+      "name": "Personal history of malignant neoplasm of breast",
+      "icd10": "Z85.3",
+      "onset": "2025-11",
+      "status": "active"
+    },
+    {
+      "name": "Acquired absence of right breast following mastectomy",
+      "icd10": "Z90.11",
+      "onset": "2026-01",
+      "status": "active"
+    }
+  ],
+  "medications": [
+    {
+      "brand_name": "Keflex",
+      "generic_name": "Cephalexin",
+      "dose": "500mg",
+      "frequency": "4x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Antibiotic prophylaxis for the first 5 days after flap reconstruction"
+    },
+    {
+      "brand_name": "Panadol",
+      "generic_name": "Paracetamol",
+      "dose": "1000mg",
+      "frequency": "4x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Regular baseline pain relief - take around the clock for the first week"
+    },
+    {
+      "brand_name": "Endone",
+      "generic_name": "Oxycodone",
+      "dose": "5mg",
+      "frequency": "PRN",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "For breakthrough pain only - wean off as comfort allows"
+    },
+    {
+      "brand_name": "Clexane",
+      "generic_name": "Enoxaparin",
+      "dose": "40mg",
+      "frequency": "1x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "DVT prophylaxis (blood-clot prevention) by injection while less mobile"
+    }
+  ],
+  "family_history": [
+    {
+      "relation": "Mother",
+      "condition": "Breast cancer",
+      "deceased": false,
+      "age_of_onset": 61
+    }
+  ],
+  "social_history": {
+    "smoking": "former",
+    "smoking_details": "Quit 8 weeks before surgery",
+    "alcohol": "occasional",
+    "alcohol_details": "1-2 standard drinks per week",
+    "exercise": "Regular walking, currently limited by recovery",
+    "occupation": "Primary school teacher"
+  },
+  "lab_results": [
+    {
+      "test": "Haemoglobin",
+      "loinc": "718-7",
+      "value": 11.4,
+      "unit": "g/dL",
+      "reference_range_low": 12.0,
+      "reference_range_high": 16.0,
+      "reference_text": "Normal female: 12.0-16.0 g/dL",
+      "interpretation": "L",
+      "date": "2026-06-24",
+      "note": "Mild post-operative anaemia - expected after major surgery, being monitored"
+    },
+    {
+      "test": "White Cell Count",
+      "loinc": "6690-2",
+      "value": 8.9,
+      "unit": "x10^9/L",
+      "reference_range_low": 4.0,
+      "reference_range_high": 11.0,
+      "reference_text": "Normal: 4.0-11.0 x10^9/L",
+      "interpretation": "N",
+      "date": "2026-06-24",
+      "note": "Normal - no laboratory sign of infection"
+    },
+    {
+      "test": "C-Reactive Protein",
+      "loinc": "1988-5",
+      "value": 42,
+      "unit": "mg/L",
+      "reference_range_low": null,
+      "reference_range_high": 5,
+      "reference_text": "Normal: <5 mg/L",
+      "interpretation": "H",
+      "date": "2026-06-24",
+      "note": "Expected transient rise after major surgery - trending down"
+    },
+    {
+      "test": "Creatinine",
+      "loinc": "2160-0",
+      "value": 0.8,
+      "unit": "mg/dL",
+      "reference_range_low": 0.6,
+      "reference_range_high": 1.2,
+      "reference_text": "Normal female: 0.6-1.2 mg/dL",
+      "interpretation": "N",
+      "date": "2026-06-24",
+      "note": null
+    }
+  ],
+  "vitals_timeline": [
+    {
+      "date": "2026-06-25",
+      "systolic": 118,
+      "diastolic": 74,
+      "heart_rate": 78,
+      "spo2": 97,
+      "sleep_hours": 6.0
+    },
+    {
+      "date": "2026-06-27",
+      "systolic": 122,
+      "diastolic": 76,
+      "heart_rate": 74,
+      "spo2": 98,
+      "sleep_hours": 6.5
+    },
+    {
+      "date": "2026-06-29",
+      "systolic": 120,
+      "diastolic": 75,
+      "heart_rate": 72,
+      "spo2": 98,
+      "sleep_hours": 7.0
+    }
+  ]
+}

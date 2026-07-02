@@ -1,0 +1,139 @@
+{
+  "demographics": {
+    "first_name": "Sophie",
+    "last_name": "Marchetti",
+    "dob": "1988-09-21",
+    "gender": "female",
+    "height_cm": 168.0,
+    "weight_kg": 66.0,
+    "bmi": 23.4,
+    "blood_type": "A+",
+    "email": "sophie.marchetti@demo.drjsk.com.au",
+    "phone": "+61 413 555 201",
+    "mrn": "DEMO-P02",
+    "preferred_language": "en"
+  },
+  "emergency_contact": {
+    "name": "Luca Marchetti",
+    "relationship": "Husband",
+    "phone": "+61 413 555 202"
+  },
+  "allergies": [],
+  "conditions": [
+    {
+      "name": "Diastasis of rectus abdominis muscle",
+      "icd10": "M62.09",
+      "onset": "2024-03",
+      "status": "active"
+    },
+    {
+      "name": "Excess abdominal skin following pregnancy and weight change",
+      "icd10": "L98.7",
+      "onset": "2024-03",
+      "status": "active"
+    }
+  ],
+  "medications": [
+    {
+      "brand_name": "Keflex",
+      "generic_name": "Cephalexin",
+      "dose": "500mg",
+      "frequency": "3x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Antibiotic prophylaxis for the first 5 days after abdominoplasty"
+    },
+    {
+      "brand_name": "Panadol",
+      "generic_name": "Paracetamol",
+      "dose": "1000mg",
+      "frequency": "4x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Regular baseline pain relief for the first week"
+    },
+    {
+      "brand_name": "Endone",
+      "generic_name": "Oxycodone",
+      "dose": "5mg",
+      "frequency": "PRN",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "For breakthrough pain only - wean off as comfort allows"
+    },
+    {
+      "brand_name": "Clexane",
+      "generic_name": "Enoxaparin",
+      "dose": "40mg",
+      "frequency": "1x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "DVT prophylaxis (blood-clot prevention) by injection while less mobile"
+    }
+  ],
+  "family_history": [],
+  "social_history": {
+    "smoking": "never",
+    "smoking_details": null,
+    "alcohol": "occasional",
+    "alcohol_details": "Social only",
+    "exercise": "Pilates and running before surgery, currently paused",
+    "occupation": "Graphic designer"
+  },
+  "lab_results": [
+    {
+      "test": "Haemoglobin",
+      "loinc": "718-7",
+      "value": 12.2,
+      "unit": "g/dL",
+      "reference_range_low": 12.0,
+      "reference_range_high": 16.0,
+      "reference_text": "Normal female: 12.0-16.0 g/dL",
+      "interpretation": "N",
+      "date": "2026-06-26",
+      "note": null
+    },
+    {
+      "test": "White Cell Count",
+      "loinc": "6690-2",
+      "value": 9.6,
+      "unit": "x10^9/L",
+      "reference_range_low": 4.0,
+      "reference_range_high": 11.0,
+      "reference_text": "Normal: 4.0-11.0 x10^9/L",
+      "interpretation": "N",
+      "date": "2026-06-26",
+      "note": "Normal - no laboratory sign of infection"
+    },
+    {
+      "test": "C-Reactive Protein",
+      "loinc": "1988-5",
+      "value": 28,
+      "unit": "mg/L",
+      "reference_range_low": null,
+      "reference_range_high": 5,
+      "reference_text": "Normal: <5 mg/L",
+      "interpretation": "H",
+      "date": "2026-06-26",
+      "note": "Expected transient rise after surgery - trending down"
+    }
+  ],
+  "vitals_timeline": [
+    {
+      "date": "2026-06-27",
+      "systolic": 116,
+      "diastolic": 72,
+      "heart_rate": 80,
+      "spo2": 98,
+      "sleep_hours": 5.5
+    },
+    {
+      "date": "2026-06-29",
+      "systolic": 118,
+      "diastolic": 74,
+      "heart_rate": 76,
+      "spo2": 99,
+      "sleep_hours": 6.5
+    }
+  ]
+}

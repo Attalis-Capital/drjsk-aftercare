@@ -1,0 +1,88 @@
+{
+  "history_of_present_illness": [
+    {
+      "term": "DIEP",
+      "start": 247,
+      "end": 251,
+      "definition": "Deep Inferior Epigastric Perforator flap - a breast reconstruction that uses skin and fat from your lower tummy, without taking muscle, to rebuild the breast."
+    },
+    {
+      "term": "mastectomy",
+      "start": 72,
+      "end": 82,
+      "definition": "An operation to remove breast tissue. Yours was skin-sparing, which keeps the outer skin to help reconstruction."
+    },
+    {
+      "term": "donor site",
+      "start": 442,
+      "end": 452,
+      "definition": "The place tissue was taken from - here, your lower abdomen. It heals over the coming weeks and feels tight at first."
+    },
+    {
+      "term": "drain",
+      "start": 634,
+      "end": 639,
+      "definition": "A soft tube that lets extra fluid drain out of the wound while it heals. The nurse removes it once the output is low."
+    }
+  ],
+  "physical_exam": [
+    {
+      "term": "capillary refill",
+      "start": 209,
+      "end": 225,
+      "definition": "A quick check of blood flow - pressing the skin and watching the colour return. Brisk return means the flap has a healthy blood supply."
+    },
+    {
+      "term": "haematoma",
+      "start": 421,
+      "end": 430,
+      "definition": "A collection of blood under the skin. Sudden severe swelling or pressure at a wound can signal this and needs urgent review."
+    },
+    {
+      "term": "seroma",
+      "start": 434,
+      "end": 440,
+      "definition": "A pocket of clear fluid that can gather under a healing wound. Small ones often settle on their own."
+    }
+  ],
+  "assessment": [
+    {
+      "term": "perfused",
+      "start": 100,
+      "end": 108,
+      "definition": "Means blood is flowing well through the tissue. A well-perfused flap is a healthy flap."
+    },
+    {
+      "term": "dehiscence",
+      "start": 272,
+      "end": 282,
+      "definition": "When a wound edge starts to open or separate. This is one of the signs to report to the practice."
+    },
+    {
+      "term": "anaemia",
+      "start": 164,
+      "end": 171,
+      "definition": "A lower-than-normal level of red blood cells or haemoglobin. Mild anaemia is common after major surgery and is monitored."
+    }
+  ],
+  "plan": [
+    {
+      "term": "cephalexin",
+      "start": 12,
+      "end": 22,
+      "definition": "An antibiotic given for a short course after surgery to help prevent wound infection."
+    },
+    {
+      "term": "enoxaparin",
+      "start": 197,
+      "end": 207,
+      "definition": "A blood-thinning injection that lowers the risk of clots (DVT) while you are less mobile."
+    },
+    {
+      "term": "paracetamol",
+      "start": 97,
+      "end": 108,
+      "definition": "A regular pain reliever (Panadol). Taking it around the clock keeps pain steady and reduces the need for stronger medicine."
+    }
+  ]
+}

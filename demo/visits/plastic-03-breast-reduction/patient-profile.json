@@ -1,0 +1,124 @@
+{
+  "demographics": {
+    "first_name": "Priya",
+    "last_name": "Ramanathan",
+    "dob": "1995-02-17",
+    "gender": "female",
+    "height_cm": 160.0,
+    "weight_kg": 72.0,
+    "bmi": 28.1,
+    "blood_type": "B+",
+    "email": "priya.ramanathan@demo.drjsk.com.au",
+    "phone": "+61 414 555 301",
+    "mrn": "DEMO-P03",
+    "preferred_language": "en"
+  },
+  "emergency_contact": {
+    "name": "Anjali Ramanathan",
+    "relationship": "Sister",
+    "phone": "+61 414 555 302"
+  },
+  "allergies": [
+    {
+      "name": "Codeine",
+      "severity": "moderate",
+      "reaction": "Nausea"
+    }
+  ],
+  "conditions": [
+    {
+      "name": "Breast hypertrophy",
+      "icd10": "N62",
+      "onset": "2019-01",
+      "status": "active"
+    },
+    {
+      "name": "Chronic neck and shoulder pain related to breast hypertrophy",
+      "icd10": "M54.2",
+      "onset": "2021-06",
+      "status": "active"
+    }
+  ],
+  "medications": [
+    {
+      "brand_name": "Keflex",
+      "generic_name": "Cephalexin",
+      "dose": "500mg",
+      "frequency": "3x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Antibiotic prophylaxis for the first 5 days after breast reduction"
+    },
+    {
+      "brand_name": "Panadol",
+      "generic_name": "Paracetamol",
+      "dose": "1000mg",
+      "frequency": "4x/day",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "Regular baseline pain relief for the first week"
+    },
+    {
+      "brand_name": "Endone",
+      "generic_name": "Oxycodone",
+      "dose": "5mg",
+      "frequency": "PRN",
+      "status": "active",
+      "started": "2026-06",
+      "reason": "For breakthrough pain only - wean off as comfort allows"
+    }
+  ],
+  "family_history": [],
+  "social_history": {
+    "smoking": "never",
+    "smoking_details": null,
+    "alcohol": "none",
+    "alcohol_details": null,
+    "exercise": "Swimming, currently paused",
+    "occupation": "Registered nurse"
+  },
+  "lab_results": [
+    {
+      "test": "Haemoglobin",
+      "loinc": "718-7",
+      "value": 12.8,
+      "unit": "g/dL",
+      "reference_range_low": 12.0,
+      "reference_range_high": 16.0,
+      "reference_text": "Normal female: 12.0-16.0 g/dL",
+      "interpretation": "N",
+      "date": "2026-06-28",
+      "note": null
+    },
+    {
+      "test": "White Cell Count",
+      "loinc": "6690-2",
+      "value": 7.8,
+      "unit": "x10^9/L",
+      "reference_range_low": 4.0,
+      "reference_range_high": 11.0,
+      "reference_text": "Normal: 4.0-11.0 x10^9/L",
+      "interpretation": "N",
+      "date": "2026-06-28",
+      "note": "Normal - no laboratory sign of infection"
+    }
+  ],
+  "vitals_timeline": [
+    {
+      "date": "2026-06-29",
+      "systolic": 122,
+      "diastolic": 78,
+      "heart_rate": 74,
+      "spo2": 99,
+      "sleep_hours": 6.5
+    },
+    {
+      "date": "2026-06-30",
+      "systolic": 120,
+      "diastolic": 76,
+      "heart_rate": 72,
+      "spo2": 99,
+      "sleep_hours": 7.0
+    }
+  ]
+}
