@@ -6,7 +6,7 @@ This template defines how clinical guidelines are formatted and injected into th
 
 ## Purpose
 
-Clinical guidelines (ESC, AHA, etc.) are loaded into the context window as reference material for the Q&A Assistant and Medical Explainer. This template ensures consistent formatting across different guideline sources.
+Clinical guidelines are loaded into the context window as reference material for the Q&A Assistant and Medical Explainer. This template ensures uniform formatting across different guideline sources for plastic and reconstructive surgery aftercare.
 
 ## Format
 
@@ -14,26 +14,26 @@ Each guideline block should follow this structure:
 
 ```
 --- CLINICAL GUIDELINE ---
-Source: [Organization, e.g., ESC, AHA]
+Source: [Organisation, e.g. ASPS, BAPRAS, ANZ guideline body]
 Title: [Full guideline title]
 Year: [Publication year]
 DOI: [Digital Object Identifier]
 PMID: [PubMed ID]
 URL: [Direct link to publication]
 Relevance: [Why this guideline is included for this visit]
-Specialty: [cardiology|endocrinology|general|...]
+Specialty: [plastic_surgery|reconstructive_surgery|general|...]
 
 ### Key Recommendations
 
-[Extracted recommendations relevant to this patient's condition]
+[Extracted recommendations relevant to this patient's procedure]
 
 ### Evidence Level
 
-[Class of recommendation and level of evidence for each key point]
+[Grade of recommendation and level of evidence for each key point]
 
 ### Patient-Relevant Sections
 
-[Sections specifically relevant to explaining the patient's condition and treatment]
+[Sections specifically relevant to explaining the patient's procedure and recovery]
 
 --- END GUIDELINE ---
 ```
@@ -41,47 +41,42 @@ Specialty: [cardiology|endocrinology|general|...]
 ## Citation Requirements
 
 Every medical reference MUST include at least one of:
-- **PMID** — PubMed ID (e.g., `37622666`)
-- **DOI** — Digital Object Identifier (e.g., `10.1093/eurheartj/ehad195`)
+- **PMID** - PubMed ID (e.g. `37622666`)
+- **DOI** - Digital Object Identifier
 
 References without PMID or DOI are considered unverified and should not be cited in patient-facing responses.
 
 Citation format for responses:
 ```
-(McDonagh TA et al., Eur Heart J 2023; PMID: 37622666)
+(Author AB et al., Plast Reconstr Surg 2023; PMID: 00000000)
 ```
 
 ## Usage Notes
 
 - Guidelines are loaded once per chat session as static context
-- Only guidelines relevant to the visit's specialty and diagnoses are included
-- The 1M token context window can accommodate 4-8 full guideline documents
+- Only guidelines relevant to the visit's procedure and diagnoses are included
+- The large context window can accommodate several full guideline documents
 - Guidelines should be pre-processed to extract the most relevant sections rather than loading entire documents
 - Source citations must be preserved for transparency in patient-facing responses
 - All PMID references can be verified at runtime via PubMed E-utilities API
 
-## Available Guidelines (Demo — Cardiology)
+## Available Guideline Topics (Demo - Plastic and Reconstructive Surgery)
 
-For the cardiology demo scenario (PVCs, propranolol):
+Reference topics loaded as context when a plastic surgery visit is active:
 
-1. **ESC Guidelines on Ventricular Arrhythmias and Prevention of SCD**
-   - Zeppenfeld K et al., Eur Heart J 2022
-   - DOI: 10.1093/eurheartj/ehac262 | PMID: 36017572
+1. **Enhanced Recovery After Surgery (ERAS) - Breast Reconstruction**
+   - Perioperative care pathways, including autologous (DIEP flap) reconstruction.
 
-2. **2023 ESC Focused Update — Acute and Chronic Heart Failure**
-   - McDonagh TA et al., Eur Heart J 2023
-   - DOI: 10.1093/eurheartj/ehad195 | PMID: 37622666
+2. **Venous Thromboembolism (VTE) Prophylaxis in Plastic Surgery**
+   - Risk assessment and DVT prophylaxis for abdominoplasty and prolonged procedures.
 
-3. **2022 AHA/ACC/HFSA Guideline for Heart Failure Management**
-   - Heidenreich PA et al., Circulation 2022
-   - DOI: 10.1161/CIR.0000000000001063 | PMID: 35363499
+3. **Surgical Antibiotic Prophylaxis**
+   - Appropriate use of prophylactic antibiotics for clean and clean-contaminated procedures.
 
-4. **ESC/EAS Dyslipidaemia Guidelines 2019**
-   - Mach F et al., Eur Heart J 2020
-   - DOI: 10.1093/eurheartj/ehz455 | PMID: 31504418
+4. **Post-operative Wound Care and Scar Management**
+   - Dressing care, monitoring for infection and dehiscence, and scar minimisation.
 
-5. **ESC CVD Prevention Guidelines 2021**
-   - Visseren FLJ et al., Eur Heart J 2021
-   - DOI: 10.1093/eurheartj/ehab484 | PMID: 34458905
+5. **Peri-operative Supplement and Anticoagulant Cessation**
+   - Guidance on stopping agents that increase bleeding risk (fish oil, vitamin E, turmeric, arnica) before surgery.
 
-These are loaded as context when a cardiology visit is active.
+Only include a guideline in patient-facing responses when it carries a verifiable PMID or DOI. Topic summaries above are reference scaffolding, not citable sources on their own.
