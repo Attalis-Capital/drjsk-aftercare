@@ -44,7 +44,7 @@ class SlackAlertService
     public static function budgetWarning(int $used, int $limit, int $percent): void
     {
         self::send(
-            ":warning: *PostVisit AI Budget* — {$percent}% used ({$used}/{$limit} calls today)",
+            ":warning: *DrJSK AfterCare AI Budget* - {$percent}% used ({$used}/{$limit} calls today)",
             "budget_{$percent}"
         );
     }
@@ -52,7 +52,7 @@ class SlackAlertService
     public static function budgetExhausted(int $limit): void
     {
         self::send(
-            ":rotating_light: *PostVisit AI Budget EXHAUSTED* — {$limit}/{$limit} calls reached. All AI endpoints returning 429.",
+            ":rotating_light: *DrJSK AfterCare AI Budget EXHAUSTED* - {$limit}/{$limit} calls reached. All AI endpoints returning 429.",
             'budget_100'
         );
     }

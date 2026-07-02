@@ -18,10 +18,10 @@ class CleanupDemoUsersCommand extends Command
         $cutoff = now()->subHours($hours);
 
         $demoUsers = User::where(function ($q) {
-            $q->where('email', 'like', '%@demo.postvisit.ai')
-                ->orWhere('email', 'like', 'demo-%@postvisit.ai');
+            $q->where('email', 'like', '%@demo.drjsk.com.au')
+                ->orWhere('email', 'like', 'demo-%@drjsk.com.au');
         })
-            ->where('email', '!=', 'doctor@demo.postvisit.ai')
+            ->where('email', '!=', 'doctor@demo.drjsk.com.au')
             ->where('created_at', '<', $cutoff)
             ->get();
 

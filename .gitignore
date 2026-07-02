@@ -40,3 +40,6 @@ Thumbs.db
 /demo/recordings/
 /demo/transcripts/
 /backup/
+
+# npm lockfile (repo standardises on composer.lock; frontend lock not tracked at root)
+/package-lock.json

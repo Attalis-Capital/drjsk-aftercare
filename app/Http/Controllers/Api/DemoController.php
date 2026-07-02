@@ -25,8 +25,8 @@ class DemoController extends Controller
         $role = $request->input('role', 'patient');
 
         $email = $role === 'doctor'
-            ? 'doctor@demo.postvisit.ai'
-            : 'patient@demo.postvisit.ai';
+            ? 'doctor@demo.drjsk.com.au'
+            : 'patient@demo.drjsk.com.au';
 
         $user = User::where('email', $email)->first();
 
@@ -60,13 +60,13 @@ class DemoController extends Controller
 
     public function status(): JsonResponse
     {
-        $hasDemoData = User::where('email', 'patient@demo.postvisit.ai')->exists();
+        $hasDemoData = User::where('email', 'patient@demo.drjsk.com.au')->exists();
 
         return response()->json([
             'data' => [
                 'seeded' => $hasDemoData,
-                'patient_email' => 'patient@demo.postvisit.ai',
-                'doctor_email' => 'doctor@demo.postvisit.ai',
+                'patient_email' => 'patient@demo.drjsk.com.au',
+                'doctor_email' => 'doctor@demo.drjsk.com.au',
                 'password' => 'password',
             ],
         ]);
@@ -93,7 +93,7 @@ class DemoController extends Controller
 
     public function simulateAlert(): JsonResponse
     {
-        $doctorUser = User::where('email', 'doctor@demo.postvisit.ai')->first();
+        $doctorUser = User::where('email', 'doctor@demo.drjsk.com.au')->first();
 
         if (! $doctorUser) {
             return response()->json(['error' => ['message' => 'Demo data not seeded']], 404);

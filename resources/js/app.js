@@ -13,7 +13,7 @@ app.use(pinia);
 app.use(router);
 
 app.config.errorHandler = (err) => {
-    console.error('[PostVisit] Unhandled error:', err);
+    console.error('[DrJSK AfterCare] Unhandled error:', err);
     const toast = useToastStore();
     toast.error('An unexpected error occurred. Please try again.');
 };

@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 PostVisit.ai
+Copyright (c) 2026 Attalis Capital
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,13 @@ SOFTWARE.
 
 ---
 
-NOTICE: This software is a prototype created during the "Built with Opus 4.6"
-hackathon (February 10-16, 2026). It is NOT intended for clinical use and does
-NOT process real patient data. Work in progress — subject to review upon ending.
+NOTICE - CLINICAL USE: DrJSK AfterCare is an AI-assisted post-visit patient
+care platform in pilot for the practice of Dr James Southwell-Keely
+(drjsk.com.au). It provides general post-operative guidance only and is NOT a
+substitute for professional medical advice, diagnosis, or treatment. It does
+not provide emergency care. Patients who are concerned must contact the
+practice on (02) 9369 2800, and in an emergency call 000. Clinical content is
+reviewed by the treating surgeon; use of this software does not create a
+doctor-patient relationship on its own. This software is derived under the MIT
+License from the PostVisit.ai hackathon prototype (Built with Opus 4.6,
+February 2026).

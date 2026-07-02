@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 py-16 overflow-hidden">
 
     <div class="showcase-item" style="--delay: 0">
-      <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-10 mb-2" />
+      <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-10 mb-2" />
     </div>
 
     <p class="showcase-item text-gray-400 text-sm tracking-wide mb-12" style="--delay: 1">

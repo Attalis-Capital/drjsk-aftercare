@@ -17,7 +17,7 @@ fresh: build up
 	docker compose exec app php artisan key:generate
 	docker compose exec app php artisan migrate --force
 	docker compose exec app php artisan db:seed --class=DemoSeeder
-	@echo "PostVisit.ai running at http://localhost:8080"
+	@echo "DrJSK AfterCare running at http://localhost:8080"
 
 # Run tests
 test:

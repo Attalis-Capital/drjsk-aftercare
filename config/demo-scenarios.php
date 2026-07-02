@@ -15,7 +15,7 @@ return [
 
     'doctor' => [
         'name' => 'Dr. Michał Nedoszytko',
-        'email' => 'doctor@demo.postvisit.ai',
+        'email' => 'doctor@demo.drjsk.com.au',
         'first_name' => 'Michał',
         'last_name' => 'Nedoszytko',
         'npi' => '1234567890',
@@ -746,7 +746,7 @@ return [
 
         'endocrinologist' => [
             'name' => 'Dr. Patel',
-            'email' => 'dr.patel@demo.postvisit.ai',
+            'email' => 'dr.patel@demo.drjsk.com.au',
             'first_name' => 'Anita',
             'last_name' => 'Patel',
             'npi' => '2345678901',
@@ -758,7 +758,7 @@ return [
 
         'gastroenterologist' => [
             'name' => 'Dr. Chen',
-            'email' => 'dr.chen@demo.postvisit.ai',
+            'email' => 'dr.chen@demo.drjsk.com.au',
             'first_name' => 'Lisa',
             'last_name' => 'Chen',
             'npi' => '3456789012',
@@ -770,7 +770,7 @@ return [
 
         'pulmonologist' => [
             'name' => 'Dr. Okafor',
-            'email' => 'dr.okafor@demo.postvisit.ai',
+            'email' => 'dr.okafor@demo.drjsk.com.au',
             'first_name' => 'Chukwuemeka',
             'last_name' => 'Okafor',
             'npi' => '4567890123',
@@ -782,7 +782,7 @@ return [
 
         'cardiologist-chen' => [
             'name' => 'Dr. Sarah Chen',
-            'email' => 'dr.sarah.chen@demo.postvisit.ai',
+            'email' => 'dr.sarah.chen@demo.drjsk.com.au',
             'first_name' => 'Sarah',
             'last_name' => 'Chen',
             'npi' => '5678901234',

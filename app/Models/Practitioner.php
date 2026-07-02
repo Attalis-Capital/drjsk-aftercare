@@ -42,11 +42,11 @@ class Practitioner extends Model
     {
         // Map demo doctor emails to photo directory keys
         $emailMap = [
-            'doctor@demo.postvisit.ai' => 'default',
-            'dr.patel@demo.postvisit.ai' => 'endocrinologist',
-            'dr.chen@demo.postvisit.ai' => 'gastroenterologist',
-            'dr.okafor@demo.postvisit.ai' => 'pulmonologist',
-            'dr.sarah.chen@demo.postvisit.ai' => 'cardiologist-chen',
+            'doctor@demo.drjsk.com.au' => 'default',
+            'dr.patel@demo.drjsk.com.au' => 'endocrinologist',
+            'dr.chen@demo.drjsk.com.au' => 'gastroenterologist',
+            'dr.okafor@demo.drjsk.com.au' => 'pulmonologist',
+            'dr.sarah.chen@demo.drjsk.com.au' => 'cardiologist-chen',
         ];
 
         $key = $emailMap[$this->email] ?? null;

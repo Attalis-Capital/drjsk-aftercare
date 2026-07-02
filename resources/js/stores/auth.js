@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', {
             this.user = {
                 id: 'demo',
                 name: role === 'doctor' ? 'Dr. Demo' : 'Demo Patient',
-                email: `demo-${role}@postvisit.ai`,
+                email: `demo-${role}@drjsk.com.au`,
                 role,
             };
             this.token = 'demo-token';

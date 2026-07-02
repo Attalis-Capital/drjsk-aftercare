@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Upload Photo — PostVisit.ai</title>
+    <title>Upload Photo - DrJSK AfterCare</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -153,7 +153,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo">PostVisit<span>.ai</span></div>
+        <div class="logo">DrJSK<span> AfterCare</span></div>
     </div>
 
     <div class="content">

@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col items-center justify-center px-6 overflow-hidden">
 
     <div class="showcase-item" style="--delay: 0">
-      <img src="/images/logo-full.png" alt="PostVisit.ai" class="h-16 sm:h-20" />
+      <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-16 sm:h-20" />
     </div>
 
     <div class="showcase-item w-16 h-px bg-emerald-300/60 my-6" style="--delay: 1"></div>
