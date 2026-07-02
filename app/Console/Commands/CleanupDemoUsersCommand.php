@@ -17,11 +17,15 @@ class CleanupDemoUsersCommand extends Command
         $hours = (int) $this->option('hours');
         $cutoff = now()->subHours($hours);
 
+        // Preserve the single persistent demo surgeon (config-driven) so cleanup
+        // never removes the shared practitioner the scenarios depend on.
+        $surgeonEmail = config('demo-scenarios.doctor.email', 'dr.southwell-keely@demo.drjsk.com.au');
+
         $demoUsers = User::where(function ($q) {
             $q->where('email', 'like', '%@demo.drjsk.com.au')
                 ->orWhere('email', 'like', 'demo-%@drjsk.com.au');
         })
-            ->where('email', '!=', 'doctor@demo.drjsk.com.au')
+            ->where('email', '!=', $surgeonEmail)
             ->where('created_at', '<', $cutoff)
             ->get();
 

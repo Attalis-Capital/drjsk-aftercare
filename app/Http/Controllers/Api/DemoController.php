@@ -5,36 +5,61 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Visit;
+use App\Services\Demo\DemoScenarioSeeder;
 use App\Services\SlackAlertService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 class DemoController extends Controller
 {
-    public function __construct()
+    /**
+     * Default plastic-surgery scenario used by the generic start/reset/alert
+     * endpoints. The authoritative demo content lives in config/demo-scenarios.php
+     * and is materialised by DemoScenarioSeeder (mission #1709 retired the legacy
+     * cardiology DemoSeeder). Per-scenario entry is via DemoScenarioController.
+     */
+    private const DEFAULT_SCENARIO = 'diep-flap';
+
+    public function __construct(private DemoScenarioSeeder $seeder)
     {
         if (! app()->environment('local', 'staging', 'testing', 'production')) {
             abort(403, 'Demo endpoints are only available in local/staging environments.');
         }
     }
 
+    /**
+     * Resolve the default scenario config or fail loudly if it is missing.
+     *
+     * @return array<string, mixed>
+     */
+    private function defaultScenario(): array
+    {
+        $scenarios = config('demo-scenarios.scenarios', []);
+
+        return $scenarios[self::DEFAULT_SCENARIO] ?? [];
+    }
+
     public function start(Request $request): JsonResponse
     {
         $role = $request->input('role', 'patient');
 
-        $email = $role === 'doctor'
-            ? 'doctor@demo.drjsk.com.au'
-            : 'patient@demo.drjsk.com.au';
-
-        $user = User::where('email', $email)->first();
-
-        if (! $user) {
+        $scenario = $this->defaultScenario();
+        if ($scenario === []) {
             return response()->json([
-                'error' => ['message' => 'Demo data not seeded. Run: php artisan db:seed --class=DemoSeeder'],
-            ], 404);
+                'error' => ['message' => 'Default demo scenario is not configured.'],
+            ], 500);
         }
+
+        // Materialise the default plastic-surgery scenario on demand via the
+        // authoritative seeder (idempotent per scenario key).
+        $patientUser = $this->seeder->seed($scenario);
+
+        // The generic start endpoint can log in as either the seeded patient or
+        // the scenario's treating doctor.
+        $user = $role === 'doctor'
+            ? ($patientUser->patient?->visits()->latest('started_at')->first()?->practitioner?->user ?? $patientUser)
+            : $patientUser;
 
         Auth::login($user);
         if ($request->hasSession()) {
@@ -42,8 +67,8 @@ class DemoController extends Controller
         }
         $token = $user->createToken('demo-token')->plainTextToken;
 
-        $visit = Visit::where('patient_id', $user->patient_id)
-            ->orWhere('created_by', $user->id)
+        $visit = Visit::where('patient_id', $patientUser->patient_id)
+            ->orWhere('created_by', $patientUser->id)
             ->with(['patient:id,first_name,last_name', 'practitioner:id,first_name,last_name'])
             ->latest('started_at')
             ->first();
@@ -54,19 +79,23 @@ class DemoController extends Controller
                 'token' => $token,
                 'visit' => $visit,
                 'role' => $role,
+                'scenario' => self::DEFAULT_SCENARIO,
             ],
         ]);
     }
 
     public function status(): JsonResponse
     {
-        $hasDemoData = User::where('email', 'patient@demo.drjsk.com.au')->exists();
+        $doctorEmail = config('demo-scenarios.doctor.email');
+        $hasDemoData = User::where('role', 'patient')
+            ->whereNotNull('demo_scenario_key')
+            ->exists();
 
         return response()->json([
             'data' => [
                 'seeded' => $hasDemoData,
-                'patient_email' => 'patient@demo.drjsk.com.au',
-                'doctor_email' => 'doctor@demo.drjsk.com.au',
+                'doctor_email' => $doctorEmail,
+                'default_scenario' => self::DEFAULT_SCENARIO,
                 'password' => 'password',
             ],
         ]);
@@ -84,7 +113,10 @@ class DemoController extends Controller
         }
 
         Artisan::call('migrate:fresh');
-        Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\DemoSeeder']);
+        $scenario = $this->defaultScenario();
+        if ($scenario !== []) {
+            $this->seeder->seed($scenario);
+        }
 
         return response()->json([
             'data' => ['message' => 'Demo data has been reset successfully.'],
@@ -93,7 +125,8 @@ class DemoController extends Controller
 
     public function simulateAlert(): JsonResponse
     {
-        $doctorUser = User::where('email', 'doctor@demo.drjsk.com.au')->first();
+        $doctorEmail = config('demo-scenarios.doctor.email');
+        $doctorUser = User::where('email', $doctorEmail)->first();
 
         if (! $doctorUser) {
             return response()->json(['error' => ['message' => 'Demo data not seeded']], 404);
@@ -105,9 +138,9 @@ class DemoController extends Controller
             'visit_id' => $visit?->id,
             'type' => 'escalation_alert',
             'title' => 'Patient Escalation Alert',
-            'body' => 'Patient reported concerning symptoms that may require immediate attention: chest pain and shortness of breath since starting medication.',
+            'body' => 'Patient reported concerning symptoms that may require immediate attention: breathing difficulty and chest pain (possible pulmonary embolism) since surgery.',
             'data' => [
-                'severity' => 'high',
+                'severity' => 'critical',
                 'trigger' => 'simulated',
             ],
         ]);

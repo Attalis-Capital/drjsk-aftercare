@@ -192,7 +192,7 @@ class TranscriptTest extends TestCase
         $transcript = Transcript::where('visit_id', $this->visit->id)->first();
 
         $this->assertNotNull($transcript);
-        $this->assertStringContainsString('DR. NEDO: Good morning', $transcript->raw_transcript);
+        $this->assertStringContainsString('day five since your reconstruction', $transcript->raw_transcript);
         $this->assertEquals('whisper', $transcript->stt_provider);
         $this->assertEquals(1590, $transcript->audio_duration_seconds);
     }
