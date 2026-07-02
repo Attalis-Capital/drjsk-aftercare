@@ -103,7 +103,7 @@ class DemoScenarioTest extends TestCase
         $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
         $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'coronarography']);
 
-        $doctorCount = User::where('email', 'doctor@demo.postvisit.ai')->count();
+        $doctorCount = User::where('email', 'doctor@demo.drjsk.com.au')->count();
         $this->assertEquals(1, $doctorCount);
     }
 
@@ -157,7 +157,7 @@ class DemoScenarioTest extends TestCase
 
         // Verify specialty practitioner was created
         $this->assertDatabaseHas('users', [
-            'email' => 'dr.patel@demo.postvisit.ai',
+            'email' => 'dr.patel@demo.drjsk.com.au',
             'role' => 'doctor',
         ]);
     }
@@ -264,13 +264,13 @@ class DemoScenarioTest extends TestCase
 
         // Default doctor (cardiology)
         $this->assertDatabaseHas('users', [
-            'email' => 'doctor@demo.postvisit.ai',
+            'email' => 'doctor@demo.drjsk.com.au',
             'role' => 'doctor',
         ]);
 
         // Specialty doctor (endocrinology)
         $this->assertDatabaseHas('users', [
-            'email' => 'dr.patel@demo.postvisit.ai',
+            'email' => 'dr.patel@demo.drjsk.com.au',
             'role' => 'doctor',
         ]);
 
