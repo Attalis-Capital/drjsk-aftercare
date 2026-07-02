@@ -211,7 +211,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
-                <input v-model="newDoctor.primary_specialty" type="text" placeholder="e.g. Cardiology, Family Medicine" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500" />
+                <input v-model="newDoctor.primary_specialty" type="text" placeholder="e.g. Plastic Surgery, General Practice" class="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500" />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Degree <span class="text-gray-400 font-normal">(optional)</span></label>
