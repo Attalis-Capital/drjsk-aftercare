@@ -43,7 +43,6 @@ class Practitioner extends Model
         // Map demo doctor emails to photo directory keys.
         // Single-surgeon practice: all demo scenarios map to Dr James Southwell-Keely.
         $emailMap = [
-            'doctor@demo.drjsk.com.au' => 'default',
             'dr.southwell-keely@demo.drjsk.com.au' => 'default',
         ];
 

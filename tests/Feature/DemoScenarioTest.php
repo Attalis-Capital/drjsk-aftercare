@@ -2,49 +2,54 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
+/**
+ * Demo scenario tests (mission #1709).
+ *
+ * The legacy cardiology/multi-specialty DemoSeeder and its 12 visit-0x dirs were
+ * retired; the three plastic-surgery scenarios in config/demo-scenarios.php
+ * (materialised on demand by DemoScenarioSeeder) are the only reachable demo
+ * content. These tests assert that path end-to-end.
+ */
 class DemoScenarioTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * The legacy cardiology/multi-specialty demo scenarios (pvcs, coronarography,
-     * diabetes, crohns, copd, fibromyalgia) and the old shared-cardiology-doctor
-     * personas are seeded by the legacy DemoSeeder, which mission #1700 Part 2
-     * intentionally did not convert (the authoritative demo path is now
-     * config/demo-scenarios.php + DemoScenarioSeeder, plastic surgery). Retiring
-     * the legacy seed + old visit dirs + DemoController::start rewiring is tracked
-     * as a follow-up: Attalis-Capital/attalis-missions#1709. These tests assert the
-     * retired legacy scenarios and are skipped until that follow-up lands.
-     */
-    private const LEGACY_DEMO_SKIP = 'Legacy cardiology demo path retired in #1700 Part 2; '
-        . 'conversion tracked in attalis-missions#1709.';
-
-    #[Group('legacy-demo')]
     public function test_can_list_demo_scenarios(): void
     {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
         $response = $this->getJson('/api/v1/demo/scenarios');
 
         $response->assertOk()
-            ->assertJsonCount(12, 'data')
-            ->assertJsonPath('data.0.key', 'pvcs')
-            ->assertJsonPath('data.0.name', 'PVCs / Palpitations')
-            ->assertJsonPath('data.0.patient_name', 'Alex Johnson')
-            ->assertJsonPath('data.1.key', 'coronarography')
-            ->assertJsonPath('data.1.name', 'Coronarography / Stenosis');
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.0.key', 'diep-flap')
+            ->assertJsonPath('data.0.name', 'DIEP Flap Reconstruction')
+            ->assertJsonPath('data.0.patient_name', 'Helen Whitfield')
+            ->assertJsonPath('data.0.specialty', 'plastic_surgery')
+            ->assertJsonPath('data.1.key', 'abdominoplasty')
+            ->assertJsonPath('data.2.key', 'breast-reduction');
     }
 
-    #[Group('legacy-demo')]
-    public function test_can_start_pvcs_scenario(): void
+    /**
+     * @return array<string, array{0: string, 1: string, 2: string}>
+     */
+    public static function plasticScenarios(): array
     {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
+        // key => [scenario key, patient first name, patient last name]
+        return [
+            'DIEP flap reconstruction' => ['diep-flap', 'Helen', 'Whitfield'],
+            'abdominoplasty' => ['abdominoplasty', 'Sophie', 'Marchetti'],
+            'breast reduction' => ['breast-reduction', 'Priya', 'Ramanathan'],
+        ];
+    }
+
+    #[DataProvider('plasticScenarios')]
+    public function test_can_start_each_plastic_scenario(string $scenario, string $first, string $last): void
+    {
         $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'pvcs',
+            'scenario' => $scenario,
         ]);
 
         $response->assertOk()
@@ -52,51 +57,26 @@ class DemoScenarioTest extends TestCase
                 'data' => ['user', 'token', 'visit', 'scenario'],
             ])
             ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'pvcs');
+            ->assertJsonPath('data.scenario', $scenario);
 
         $this->assertDatabaseHas('patients', [
-            'first_name' => 'Alex',
-            'last_name' => 'Johnson',
-        ]);
-
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'I49.3',
-            'code_display' => 'Premature ventricular contractions',
+            'first_name' => $first,
+            'last_name' => $last,
         ]);
     }
 
-    #[Group('legacy-demo')]
-    public function test_can_start_coronarography_scenario(): void
+    public function test_generic_start_seeds_default_plastic_scenario(): void
     {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'coronarography',
-        ]);
+        $response = $this->postJson('/api/v1/demo/start', []);
 
         $response->assertOk()
-            ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'coronarography');
+            ->assertJsonPath('data.role', 'patient')
+            ->assertJsonPath('data.scenario', 'diep-flap');
 
+        // Default scenario patient is materialised.
         $this->assertDatabaseHas('patients', [
-            'first_name' => 'Marie',
-            'last_name' => 'Dupont',
-        ]);
-
-        // Verify conditions were loaded from JSON
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'I25.1',
-            'code_display' => 'Atherosclerotic heart disease',
-        ]);
-
-        // Verify medications were loaded from JSON
-        $this->assertDatabaseHas('medications', [
-            'generic_name' => 'Rosuvastatin',
-        ]);
-
-        // Verify lab observations were loaded from JSON
-        $this->assertDatabaseHas('observations', [
-            'code' => '2093-3',
-            'code_display' => 'Total Cholesterol',
+            'first_name' => 'Helen',
+            'last_name' => 'Whitfield',
         ]);
     }
 
@@ -118,21 +98,10 @@ class DemoScenarioTest extends TestCase
             ->assertJsonPath('error.message', 'Unknown scenario: nonexistent');
     }
 
-    #[Group('legacy-demo')]
-    public function test_doctor_is_shared_across_scenarios(): void
-    {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
-        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'coronarography']);
-
-        $doctorCount = User::where('email', 'doctor@demo.drjsk.com.au')->count();
-        $this->assertEquals(1, $doctorCount);
-    }
-
     public function test_same_scenario_reuses_existing_user(): void
     {
-        $r1 = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
-        $r2 = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
+        $r1 = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diep-flap']);
+        $r2 = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diep-flap']);
 
         $this->assertEquals(
             $r1->json('data.user.id'),
@@ -140,174 +109,30 @@ class DemoScenarioTest extends TestCase
         );
     }
 
-    #[Group('legacy-demo')]
-    public function test_scenario_creates_visit_note_with_medical_terms(): void
+    public function test_scenario_creates_visit_note_with_patient_visit(): void
     {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
+        $response = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diep-flap']);
 
-        $this->assertDatabaseHas('visit_notes', [
-            'chief_complaint' => 'Heart palpitations and irregular heartbeat for 3 weeks',
-        ]);
+        $response->assertOk();
+        $this->assertNotNull($response->json('data.visit'), 'Expected a seeded visit for the scenario');
     }
 
-    #[Group('legacy-demo')]
-    public function test_can_start_diabetes_scenario(): void
+    public function test_single_surgeon_across_scenarios(): void
     {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'diabetes-management',
-        ]);
+        // All plastic scenarios map to the single practice surgeon; starting two
+        // scenarios must not create competing default-doctor personas.
+        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diep-flap']);
+        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'abdominoplasty']);
 
-        $response->assertOk()
-            ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'diabetes-management');
-
-        $this->assertDatabaseHas('patients', [
-            'first_name' => 'Carlos',
-            'last_name' => 'Rodriguez',
-        ]);
-
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'E11.65',
-        ]);
-
-        $this->assertDatabaseHas('medications', [
-            'generic_name' => 'Metformin',
-        ]);
-
-        $this->assertDatabaseHas('observations', [
-            'code' => '4548-4',
-            'code_display' => 'HbA1c',
-        ]);
-
-        // Verify specialty practitioner was created
+        $doctorEmail = config('demo-scenarios.doctor.email');
         $this->assertDatabaseHas('users', [
-            'email' => 'dr.patel@demo.drjsk.com.au',
+            'email' => $doctorEmail,
             'role' => 'doctor',
         ]);
-    }
-
-    #[Group('legacy-demo')]
-    public function test_can_start_crohns_scenario(): void
-    {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'crohns-flare',
-        ]);
-
-        $response->assertOk()
-            ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'crohns-flare');
-
-        $this->assertDatabaseHas('patients', [
-            'first_name' => 'Yukita',
-            'last_name' => 'Naka',
-        ]);
-
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'K50.90',
-        ]);
-
-        $this->assertDatabaseHas('medications', [
-            'generic_name' => 'Adalimumab',
-        ]);
-
-        $this->assertDatabaseHas('observations', [
-            'code' => '1988-5',
-            'code_display' => 'C-Reactive Protein',
-        ]);
-    }
-
-    #[Group('legacy-demo')]
-    public function test_can_start_copd_scenario(): void
-    {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'copd-exacerbation',
-        ]);
-
-        $response->assertOk()
-            ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'copd-exacerbation');
-
-        $this->assertDatabaseHas('patients', [
-            'first_name' => 'James',
-            'last_name' => 'Washington',
-        ]);
-
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'J44.1',
-        ]);
-
-        $this->assertDatabaseHas('medications', [
-            'generic_name' => 'Tiotropium bromide',
-        ]);
-
-        $this->assertDatabaseHas('observations', [
-            'code' => '6690-2',
-            'code_display' => 'WBC (White Blood Cell Count)',
-        ]);
-    }
-
-    #[Group('legacy-demo')]
-    public function test_can_start_fibromyalgia_scenario(): void
-    {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $response = $this->postJson('/api/v1/demo/start-scenario', [
-            'scenario' => 'fibromyalgia',
-        ]);
-
-        $response->assertOk()
-            ->assertJsonPath('data.user.role', 'patient')
-            ->assertJsonPath('data.scenario', 'fibromyalgia');
-
-        $this->assertDatabaseHas('patients', [
-            'first_name' => 'Fatima',
-            'last_name' => 'Benali',
-        ]);
-
-        // Verify conditions loaded (ICD-10 for fibromyalgia)
-        $this->assertDatabaseHas('conditions', [
-            'code' => 'M79.7',
-            'code_display' => 'Fibromyalgia',
-        ]);
-
-        // Verify non-numeric lab value (ANA = "negative") is stored correctly
-        $this->assertDatabaseHas('observations', [
-            'code' => '8060-1',
-            'code_display' => 'ANA',
-            'value_type' => 'string',
-            'value_string' => 'negative',
-        ]);
-
-        // Verify numeric lab values also work
-        $this->assertDatabaseHas('observations', [
-            'code' => '718-7',
-            'code_display' => 'Hemoglobin',
-            'value_type' => 'quantity',
-        ]);
-    }
-
-    #[Group('legacy-demo')]
-    public function test_specialty_practitioners_are_separate_from_default_doctor(): void
-    {
-        $this->markTestSkipped(self::LEGACY_DEMO_SKIP);
-        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'pvcs']);
-        $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diabetes-management']);
-
-        // Default doctor (cardiology)
-        $this->assertDatabaseHas('users', [
-            'email' => 'doctor@demo.drjsk.com.au',
-            'role' => 'doctor',
-        ]);
-
-        // Specialty doctor (endocrinology)
-        $this->assertDatabaseHas('users', [
-            'email' => 'dr.patel@demo.drjsk.com.au',
-            'role' => 'doctor',
-        ]);
-
-        $this->assertEquals(2, User::where('role', 'doctor')->count());
+        $this->assertSame(
+            1,
+            \App\Models\User::where('role', 'doctor')->count(),
+            'Expected exactly one demo surgeon across scenarios'
+        );
     }
 }
