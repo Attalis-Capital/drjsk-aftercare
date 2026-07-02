@@ -65,7 +65,7 @@ class EscalationDetector
                     'severity' => 'critical',
                     'reason' => "Message contains critical symptom: '{$keyword}'",
                     'trigger_phrases' => [$keyword],
-                    'recommended_action' => 'This sounds like it could be urgent. Please contact your doctor immediately or call emergency services (911). Do not wait.',
+                    'recommended_action' => 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.',
                     'context_factors' => [],
                 ];
             }

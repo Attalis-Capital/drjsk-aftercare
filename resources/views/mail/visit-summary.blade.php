@@ -91,7 +91,7 @@
 
         <div class="footer">
             <p>DrJSK AfterCare &mdash; AI-powered post-visit care</p>
-            <p>This is an automated summary. For medical emergencies, call 911.</p>
+            <p>This is an automated summary. If you are concerned, call the practice on (02) 9369 2800. For medical emergencies, call 000.</p>
         </div>
     </div>
 </body>
