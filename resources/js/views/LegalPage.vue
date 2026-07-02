@@ -61,7 +61,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">8. Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:privacy@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">privacy@drjsk.com.au</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For privacy-related inquiries, please contact us at <a href="mailto:info@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">info@drjsk.com.au</a>.</p>
         </section>
       </div>
 
@@ -144,7 +144,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Contact</h2>
-          <p class="text-gray-600 leading-relaxed">For questions about DrJSK AfterCare, please contact <a href="mailto:hello@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">hello@drjsk.com.au</a>.</p>
+          <p class="text-gray-600 leading-relaxed">For questions about DrJSK AfterCare, please contact <a href="mailto:info@drjsk.com.au" class="text-emerald-600 hover:text-emerald-700 underline">info@drjsk.com.au</a>.</p>
         </section>
       </div>
 
