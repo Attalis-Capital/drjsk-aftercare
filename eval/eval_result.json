@@ -1,0 +1,3548 @@
+{
+  "run_config": {
+    "primary_model": "claude-opus-4-8",
+    "secondary_model": "gemini-3.5-flash",
+    "confidence_floor": 0.7,
+    "max_tokens": 400,
+    "dataset": "xuxuxuxuxu/SurgWound (SurgWound-Bench)",
+    "split": "test",
+    "field": "Urgency Level",
+    "positive_class": "Yellow+Red (Clinic within 48h / Emergency)",
+    "negative_class": "Green (Home Care)",
+    "n_images": 137,
+    "gateway": "https://litellm.attaliscapital.com",
+    "prompt_hash_primary": "71d54d60934b334b",
+    "prompt_hash_secondary": "b94379f7eb1c72b0"
+  },
+  "confusion_matrix": {
+    "tp": 16,
+    "fp": 103,
+    "tn": 18,
+    "fn": 0,
+    "positives": 16,
+    "negatives": 121
+  },
+  "metrics": {
+    "sensitivity_recall_urgent": 1.0,
+    "specificity": 0.1487603305785124,
+    "ppv_precision": 0.13445378151260504,
+    "npv": 1.0,
+    "target_sensitivity": 0.89,
+    "gate_met": true
+  },
+  "spend": {
+    "cumulative_usd": 4.9622,
+    "live_calls": 274,
+    "cache_hits": 0,
+    "failures": 0,
+    "input_tokens": 524149,
+    "output_tokens": 29214,
+    "per_model": {
+      "claude-opus-4-8": {
+        "calls": 137,
+        "in": 253244,
+        "out": 13921,
+        "usd": 4.8427
+      },
+      "gemini-3.5-flash": {
+        "calls": 137,
+        "in": 270905,
+        "out": 15293,
+        "usd": 0.1195
+      }
+    }
+  },
+  "records": [
+    {
+      "image_name": "424.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "679.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "663.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "714.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "880.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "457.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "194.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "501.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "93.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "110.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "470.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "41.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "807.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "3.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.99,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "385.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "267.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "590.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "125.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "46.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "237.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "899.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "709.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "193.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "984.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "311.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "44.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "111.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "478.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "459.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "626.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "25.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "253.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "146.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "139.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "79.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "521.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "419.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "842.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "787.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "578.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "937.jpg",
+      "gt_answer": "Emergency Care (Red): Seek immediate medical attention",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "700.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "143.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "944.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "66.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "68.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "299.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "63.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "87.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "334.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "124.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "411.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "705.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "13.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "178.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.94,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "477.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.8,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "214.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "22.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "811.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "788.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "659.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "602.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "974.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "100.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "436.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "315.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "392.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "495.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "686.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "30.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "257.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "104.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "544.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "75.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "67.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "268.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "985.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "134.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "592.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "777.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "180.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "15.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "884.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "983.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "612.jpg",
+      "gt_answer": "Emergency Care (Red): Seek immediate medical attention",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "786.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "465.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "657.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "942.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.99,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "99.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "928.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "973.jpg",
+      "gt_answer": "Emergency Care (Red): Seek immediate medical attention",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "533.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "511.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "718.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "209.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "291.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "282.jpg",
+      "gt_answer": "Clinic Visit (Yellow): Requires professional evaluation within 48 hours",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "90.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "276.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "471.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.94,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "119.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "520.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "588.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "933.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.98,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "582.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "560.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "734.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "625.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "717.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "442.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "675.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "943.jpg",
+      "gt_answer": "Emergency Care (Red): Seek immediate medical attention",
+      "gt_positive": true,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 1.0,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "77.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "265.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "396.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "155.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.97,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "805.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "240.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.84,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "405.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "575.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.62,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "377.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.76,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "31.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "needs-review",
+      "pred_positive": false,
+      "reason": "both_agree_needs_review_confident",
+      "escalated_by": [],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.89,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "451.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "372.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.18,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "needs-review",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "576.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.91,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "634.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.92,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "623.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "674.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "476.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "553.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "806.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "481.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.88,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.85,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "767.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.93,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "445.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "907.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.96,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.95,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    },
+    {
+      "image_name": "382.jpg",
+      "gt_answer": "Home Care (Green): Manage with routine care",
+      "gt_positive": false,
+      "pred_class": "urgent",
+      "pred_positive": true,
+      "reason": "or_gate_escalation",
+      "escalated_by": [
+        "primary_urgent",
+        "secondary_urgent"
+      ],
+      "primary": {
+        "class": "urgent",
+        "confidence": 0.82,
+        "ok": true,
+        "http": 200,
+        "err": false
+      },
+      "secondary": {
+        "class": "urgent",
+        "confidence": 0.9,
+        "ok": true,
+        "http": 200,
+        "err": false
+      }
+    }
+  ]
+}

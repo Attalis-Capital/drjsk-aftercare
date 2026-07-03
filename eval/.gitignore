@@ -1,0 +1,6 @@
+# SurgWound-Bench dataset images and manifest are NOT committed (CC-BY-SA-4.0
+# source data; commit only harness code + report artefacts).
+.cache/
+*.pyc
+__pycache__/
+venv/

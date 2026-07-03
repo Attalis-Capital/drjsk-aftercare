@@ -115,6 +115,39 @@
         .success-title { font-size: 20px; font-weight: 700; color: #059669; }
         .success-text { font-size: 14px; color: #6b7280; text-align: center; }
 
+        /* D6 consent line */
+        .consent {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+            max-width: 340px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        /* Triage urgent result (in-chat surfacing, D5) */
+        .triage-urgent {
+            width: 100%;
+            max-width: 340px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 16px;
+            color: #991b1b;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .triage-note {
+            width: 100%;
+            max-width: 340px;
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+            line-height: 1.5;
+        }
+
         /* Error */
         .error-icon {
             width: 64px; height: 64px;
@@ -167,6 +200,9 @@
             <div class="upload-area">
                 <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none">
                 <select id="doc-type" class="type-select">
+                    @if(!empty($triageEnabled))
+                        <option value="wound_photo">Wound photo</option>
+                    @endif
                     <option value="photo">Photo</option>
                     <option value="ecg">ECG</option>
                     <option value="imaging">Imaging</option>
@@ -184,6 +220,14 @@
                 </button>
                 <p class="hint">or choose an existing image from your gallery</p>
             </div>
+            @if(!empty($triageEnabled))
+                {{-- D6 consent (PLACEHOLDER copy - pending James's approval at pilot handoff) --}}
+                <p class="consent" id="consent-line">
+                    Photos you upload are analysed by external AI providers to help your
+                    care team review them. They are not a diagnosis. If you are worried,
+                    call the practice.
+                </p>
+            @endif
         </div>
 
         <!-- Uploading state -->
@@ -200,7 +244,10 @@
                 </svg>
             </div>
             <div class="success-title">Photo uploaded</div>
-            <div class="success-text">Your photo has been sent to your desktop. You can close this page.</div>
+            <div class="success-text" id="success-text">Your photo has been sent to your desktop. You can close this page.</div>
+            {{-- D5: in-chat urgent surfacing rendered here when triage returns urgent --}}
+            <div class="triage-urgent" id="triage-urgent" style="display:none"></div>
+            <div class="triage-note" id="triage-note" style="display:none"></div>
         </div>
 
         <!-- Error state -->
@@ -287,7 +334,23 @@
                         throw new Error(data.error || data.message || 'Upload failed');
                     }
 
+                    const body = await response.json().catch(() => ({}));
                     showState('success');
+
+                    // D5: surface the triage verdict in-chat on this screen.
+                    const triage = body && body.triage;
+                    const urgentEl = document.getElementById('triage-urgent');
+                    const noteEl = document.getElementById('triage-note');
+                    if (triage && triage.message) {
+                        if (triage.is_urgent) {
+                            document.getElementById('success-text').style.display = 'none';
+                            urgentEl.textContent = triage.message;
+                            urgentEl.style.display = 'block';
+                        } else {
+                            noteEl.textContent = triage.message;
+                            noteEl.style.display = 'block';
+                        }
+                    }
                 } catch (err) {
                     document.getElementById('error-message').textContent = err.message || 'Something went wrong. Please try again.';
                     showState('error');
