@@ -30,7 +30,22 @@ php artisan view:cache
 # (non-local) environments. Seeding is demo-only (DemoScenarioSeeder); this
 # instance must never hold real patient data.
 php artisan migrate --force
-php artisan db:seed --force
+
+# Demo seed - GUARDED. DemoScenarioSeeder is NOT idempotent: it uses firstOrCreate
+# for org/practitioner/patient/medication but blind create() for users, visits,
+# observations, prescriptions, notes, transcripts, chat sessions and audit logs.
+# Running it on every deploy would duplicate the demo roster in front of James.
+# So seed only when the DB has not been seeded yet (no organizations row). A
+# fresh Postgres volume seeds once; every redeploy after that is a no-op. To
+# deliberately re-seed, wipe the volume or run the documented
+# `migrate:fresh --seed` manually.
+SEEDED=$(php artisan tinker --execute='echo \App\Models\Organization::query()->exists() ? 1 : 0;' 2>/dev/null | tail -n1 | tr -dc '01')
+if [ "${SEEDED}" = "1" ]; then
+    echo "Demo data already present (organizations exist) - skipping seed to avoid duplicate roster."
+else
+    echo "No demo data found - running DemoScenarioSeeder (first deploy on this volume)."
+    php artisan db:seed --force
+fi
 
 # Storage symlink for public file access (idempotent).
 php artisan storage:link || true

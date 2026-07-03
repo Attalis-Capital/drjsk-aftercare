@@ -47,8 +47,11 @@ COPY . .
 RUN composer dump-autoload --optimize
 RUN bun run build
 
-# Production PHP config
+# Production PHP config. The stock php.ini-production ships upload_max_filesize=2M
+# / post_max_size=8M; drop in an override so real phone wound photos (2-5 MB) are
+# not rejected by PHP before nginx's 50M limit applies (#1723).
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY docker/uploads.ini "$PHP_INI_DIR/conf.d/zz-uploads.ini"
 
 # nginx: create the runtime dir and install the $PORT-templated server block.
 # The entrypoint runs envsubst on this template into the active conf at start.

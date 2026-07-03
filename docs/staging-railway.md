@@ -6,7 +6,9 @@ Staging instance for the DrJSK AfterCare pilot sign-off (mission attalis-mission
 
 - Build: `Dockerfile.railway` (single container: php-fpm + nginx, selected via `railway.json`).
 - Web: nginx serves `public/` and proxies PHP to php-fpm on 127.0.0.1:9000, listening on Railway's `$PORT`.
-- Release (in `docker/railway-entrypoint.sh`, runs every deploy): `php artisan migrate --force` then `php artisan db:seed --force` (DemoScenarioSeeder — three plastic-surgery scenarios), config/route/view cache, storage symlink.
+- Release (in `docker/railway-entrypoint.sh`, runs every deploy): `php artisan migrate --force`, then a **guarded** demo seed, config/route/view cache, storage symlink.
+- **Upload limits:** `docker/uploads.ini` sets `upload_max_filesize=25M` / `post_max_size=26M` (dropped into `conf.d/`). The stock `php.ini-production` ships 2M/8M, which would reject a real phone wound photo *before* nginx's 50M limit ever applied — PHP is the first gate. 25M/26M sits above the app's own `max:20480` (20 MB) validation ceiling and under nginx's 50M.
+- **Seed is idempotent at the deploy level:** DemoScenarioSeeder itself is NOT idempotent (blind `create()` for users/visits/observations/etc.), so the entrypoint only seeds when the DB has no `organizations` row. A fresh volume seeds once; every redeploy is a no-op, so James never sees a duplicated demo roster. To deliberately re-seed, use the reseed command below (which wipes first).
 - Health check: `/up` (Laravel 12 default).
 - Not indexable: `X-Robots-Tag: noindex, nofollow, noarchive` at the nginx edge AND via the `NoIndex` middleware on every non-production response AND a `<meta name="robots">` in the app + upload shells.
 
