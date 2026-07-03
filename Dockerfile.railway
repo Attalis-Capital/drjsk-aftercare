@@ -1,0 +1,69 @@
+# Railway single-container image for drjsk-aftercare staging (mission #1723).
+#
+# Unlike the compose Dockerfile (php-fpm only, fronted by a separate nginx
+# service), Railway runs one container that must serve HTTP directly. This image
+# bundles php-fpm + nginx and an entrypoint that runs migrate + demo seed on
+# release, then serves the app on the Railway-assigned $PORT.
+FROM php:8.4-fpm-alpine
+
+# System dependencies: pgsql, zip tooling, nginx, gettext (envsubst for $PORT),
+# node/npm for the frontend build, bash/curl for tooling.
+RUN apk add --no-cache \
+    postgresql-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    curl \
+    bash \
+    nginx \
+    gettext \
+    nodejs \
+    npm
+
+# PHP extensions
+RUN docker-php-ext-install pdo pdo_pgsql zip bcmath opcache
+
+# Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Bun (frontend build), matching the compose Dockerfile toolchain
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
+
+WORKDIR /var/www/html
+
+# Composer deps first for layer caching
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+
+# Frontend deps for layer caching
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile 2>/dev/null || bun install
+
+# Application code
+COPY . .
+
+RUN composer dump-autoload --optimize
+RUN bun run build
+
+# Production PHP config
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# nginx: create the runtime dir and install the $PORT-templated server block.
+# The entrypoint runs envsubst on this template into the active conf at start.
+RUN mkdir -p /run/nginx /etc/nginx/http.d
+COPY docker/railway-nginx.conf /etc/nginx/http.d/railway-nginx.conf.template
+RUN rm -f /etc/nginx/http.d/default.conf
+
+# Entrypoint
+COPY docker/railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
+RUN chmod +x /usr/local/bin/railway-entrypoint.sh
+
+# Permissions for Laravel writable dirs
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Railway injects $PORT; nginx binds it. EXPOSE is documentary only.
+EXPOSE 8080
+
+CMD ["/usr/local/bin/railway-entrypoint.sh"]

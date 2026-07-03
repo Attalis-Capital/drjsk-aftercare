@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- #1723: staging must never be indexed. Emitted on non-production only so a
+         future production deploy is not accidentally de-indexed. --}}
+    @if(strtolower((string) config('app.env')) !== 'production')
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    @endif
+
     <title>DrJSK AfterCare</title>
 
     @if(config('services.google.analytics_id'))
