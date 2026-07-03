@@ -130,7 +130,7 @@ function formatValue(val) {
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return new Date(dateStr).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
 }
 
 function rangeBarStyle(obs) {

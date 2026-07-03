@@ -32,7 +32,7 @@ const day = computed(() => {
 
 const monthAbbr = computed(() => {
     if (!parsed.value) return '···';
-    return parsed.value.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+    return parsed.value.toLocaleDateString('en-AU', { month: 'short' }).toUpperCase();
 });
 
 const sizeClasses = computed(() => {

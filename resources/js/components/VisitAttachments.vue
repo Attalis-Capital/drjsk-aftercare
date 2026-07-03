@@ -141,7 +141,7 @@
                   </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-semibold text-emerald-800">AI is analyzing this document...</p>
+                  <p class="text-sm font-semibold text-emerald-800">AI is analysing this document...</p>
                   <p class="text-xs text-emerald-600 mt-0.5">Extracting findings and key values</p>
                 </div>
               </div>
@@ -601,7 +601,7 @@ function formatSize(bytes) {
 
 function formatDate(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
 }
 
 async function startQrUpload() {

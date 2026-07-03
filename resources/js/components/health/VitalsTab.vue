@@ -530,11 +530,11 @@ const sleepChartOptions = computed(() => ({
 
 function formatShortDate(d: string): string {
     if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return new Date(d).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
 }
 
 function formatDateTime(d: string): string {
     if (!d) return '';
-    return new Date(d).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return new Date(d).toLocaleString('en-AU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 </script>

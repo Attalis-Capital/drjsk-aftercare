@@ -55,7 +55,7 @@
             'bg-red-100 text-red-700': doc.analysis_status === 'failed',
           }"
         >
-          {{ doc.analysis_status === 'pending' ? 'Analyzing...' : doc.analysis_status === 'completed' ? 'Analyzed' : 'Error' }}
+          {{ doc.analysis_status === 'pending' ? 'Analysing...' : doc.analysis_status === 'completed' ? 'Analysed' : 'Error' }}
         </span>
       </div>
     </div>
@@ -417,11 +417,11 @@ function formatQuantity(val: any): string {
 
 function formatDate(d: string): string {
     if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    return new Date(d).toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function formatShortDate(d: string): string {
     if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return new Date(d).toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
 }
 </script>

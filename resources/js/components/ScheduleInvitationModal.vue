@@ -241,7 +241,7 @@ const currentYear = ref(today.getFullYear());
 
 const monthLabel = computed(() => {
   const d = new Date(currentYear.value, currentMonth.value, 1);
-  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  return d.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
 });
 
 const calendarDays = computed(() => {
@@ -306,7 +306,7 @@ function nextMonth(): void {
 
 function formatDate(date: Date | null): string {
   if (!date) return '';
-  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-AU', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 function scheduleAppointment(): void {

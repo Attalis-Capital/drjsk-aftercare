@@ -171,7 +171,7 @@ function categoryClass(cat) {
 
 function formatDate(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function formatVisitType(type) {
@@ -181,7 +181,7 @@ function formatVisitType(type) {
 
 function formatTime(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleString('en-US', {
+    return new Date(dateStr).toLocaleString('en-AU', {
         month: 'short', day: 'numeric',
         hour: '2-digit', minute: '2-digit',
     });

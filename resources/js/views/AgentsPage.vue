@@ -307,8 +307,8 @@ function generateToken(): void {
     name,
     prefix: fullToken.slice(0, 7),
     suffix: fullToken.slice(-4),
-    created: now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    expires: expiresDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    created: now.toLocaleDateString('en-AU', { month: 'short', day: 'numeric', year: 'numeric' }),
+    expires: expiresDate.toLocaleDateString('en-AU', { month: 'short', day: 'numeric', year: 'numeric' }),
   };
 
   tokens.unshift(token);
