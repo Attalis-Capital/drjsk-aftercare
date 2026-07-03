@@ -17,6 +17,7 @@ class Notification extends Model
         'user_id',
         'visit_id',
         'type',
+        'severity',
         'title',
         'body',
         'data',
