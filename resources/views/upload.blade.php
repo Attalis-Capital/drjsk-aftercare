@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Upload Photo - DrJSK AfterCare</title>
     <style>
+        /* S11 (#1718): brand token layer aligned to drjsk.com.au (soft blue-grey)
+           replacing the hardcoded emerald brand chrome. Success/error states
+           keep their semantic green/red. */
+        :root {
+            --brand-accent: #3f5b74;
+            --brand-accent-hover: #33495c;
+            --brand-accent-active: #26333f;
+        }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -24,7 +32,7 @@
         .logo {
             font-size: 18px;
             font-weight: 700;
-            color: #059669;
+            color: var(--brand-accent);
         }
         .logo span { color: #6b7280; font-weight: 400; }
         .content {
@@ -53,7 +61,7 @@
             gap: 10px;
             width: 100%;
             padding: 18px 24px;
-            background: #059669;
+            background: var(--brand-accent);
             color: white;
             border: none;
             border-radius: 16px;
@@ -62,8 +70,8 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-        .upload-btn:hover { background: #047857; }
-        .upload-btn:active { background: #065f46; }
+        .upload-btn:hover { background: var(--brand-accent-hover); }
+        .upload-btn:active { background: var(--brand-accent-active); }
         .upload-btn:disabled { background: #9ca3af; cursor: not-allowed; }
         .upload-btn svg { width: 24px; height: 24px; }
         .hint {
@@ -95,7 +103,7 @@
         .spinner {
             width: 48px; height: 48px;
             border: 4px solid #e5e7eb;
-            border-top-color: #059669;
+            border-top-color: var(--brand-accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -147,6 +155,12 @@
             text-align: center;
             line-height: 1.5;
         }
+        .triage-urgent a, .triage-note a { color: inherit; font-weight: 700; text-decoration: underline; }
+        .triage-urgent-badge {
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
 
         /* Error */
         .error-icon {
@@ -197,28 +211,32 @@
                     Uploading for visit: <strong>{{ $visitReason }}</strong>
                 </div>
             @endif
+            {{-- S5 (#1718): patient QR wound-photo flow. Drop the clinical
+                 ECG/Imaging/Lab-Result jargon (a patient photographing a wound
+                 does not classify a lab result) and offer only the two options
+                 that make sense here. When triage is enabled, wound photo is
+                 the default. --}}
             <div class="upload-area">
-                <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none">
+                <input type="file" id="file-input" accept="image/*" style="display:none">
                 <select id="doc-type" class="type-select">
                     @if(!empty($triageEnabled))
                         <option value="wound_photo">Wound photo</option>
                     @endif
-                    <option value="photo">Photo</option>
-                    <option value="ecg">ECG</option>
-                    <option value="imaging">Imaging</option>
-                    <option value="lab_result">Lab Result</option>
-                    <option value="other">Other</option>
+                    <option value="photo">Other photo</option>
                 </select>
             </div>
             <div class="upload-area">
+                {{-- S5 (#1718): the button offered camera capture only while the
+                     hint promised gallery choice. The file input now allows both
+                     (no forced capture attribute) and the labels match. --}}
                 <button id="upload-btn" class="upload-btn" type="button">
                     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
                     </svg>
-                    Take Photo
+                    Take or Choose Photo
                 </button>
-                <p class="hint">or choose an existing image from your gallery</p>
+                <p class="hint">Take a new photo or choose an existing image from your gallery</p>
             </div>
             @if(!empty($triageEnabled))
                 {{-- D6 consent (PLACEHOLDER copy - pending James's approval at pilot handoff) --}}
@@ -238,13 +256,27 @@
 
         <!-- Success state -->
         <div id="state-success" class="state">
-            <div class="success-icon">
+            {{-- B6 (#1718): the green success tick + title are hidden when the
+                 verdict is urgent, so an urgent result never sits under an
+                 all-clear tick. --}}
+            <div class="success-icon" id="success-icon">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
             </div>
-            <div class="success-title">Photo uploaded</div>
-            <div class="success-text" id="success-text">Your photo has been sent to your desktop. You can close this page.</div>
+            {{-- B6 (#1718): distinct urgent alert banner, shown instead of the
+                 success tick when triage returns urgent. --}}
+            <div class="triage-urgent-badge" id="triage-urgent-badge" style="display:none">
+                <div class="error-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <div class="error-title">Please act on this now</div>
+            </div>
+            <div class="success-title" id="success-title">Photo uploaded</div>
+            {{-- S6 (#1718): practice-oriented wording (non-gated copy). --}}
+            <div class="success-text" id="success-text">Your photo has been uploaded and added to your visit record. You can close this page.</div>
             {{-- D5: in-chat urgent surfacing rendered here when triage returns urgent --}}
             <div class="triage-urgent" id="triage-urgent" style="display:none"></div>
             <div class="triage-note" id="triage-note" style="display:none"></div>
@@ -284,6 +316,19 @@
             const uploadBtn = document.getElementById('upload-btn');
             const docType = document.getElementById('doc-type');
             const retryBtn = document.getElementById('retry-btn');
+
+            // B6 (#1718): wrap phone numbers in the (frozen) message in tel:
+            // links without altering any characters of the message text. The
+            // practice number and emergency number both become tappable.
+            function linkifyPhones(text) {
+                const escaped = text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                return escaped
+                    .replace(/\(02\) 9369 2800/g, '<a href="tel:+61293692800">$&</a>')
+                    .replace(/(?<![\d>])000(?![\d<])/g, '<a href="tel:000">$&</a>');
+            }
 
             function showState(name) {
                 document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
@@ -343,11 +388,18 @@
                     const noteEl = document.getElementById('triage-note');
                     if (triage && triage.message) {
                         if (triage.is_urgent) {
+                            // B6 (#1718): distinct urgent treatment - hide the
+                            // green success chrome, show the alert banner, and
+                            // render the (frozen) message with tappable tel:
+                            // links. Message text bytes are unchanged.
                             document.getElementById('success-text').style.display = 'none';
-                            urgentEl.textContent = triage.message;
+                            document.getElementById('success-icon').style.display = 'none';
+                            document.getElementById('success-title').style.display = 'none';
+                            document.getElementById('triage-urgent-badge').style.display = 'flex';
+                            urgentEl.innerHTML = linkifyPhones(triage.message);
                             urgentEl.style.display = 'block';
                         } else {
-                            noteEl.textContent = triage.message;
+                            noteEl.innerHTML = linkifyPhones(triage.message);
                             noteEl.style.display = 'block';
                         }
                     }

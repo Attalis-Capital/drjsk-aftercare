@@ -32,9 +32,11 @@
         </div>
         <button
           class="p-2 text-gray-600 hover:text-indigo-700 transition-colors"
+          :aria-label="mobileOpen ? 'Close menu' : 'Open menu'"
+          :aria-expanded="mobileOpen"
           @click="mobileOpen = !mobileOpen"
         >
-          <svg v-if="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg v-if="!mobileOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,6 +78,14 @@
             >
               {{ totalUnread > 99 ? '99+' : totalUnread }}
             </span>
+          </router-link>
+          <router-link
+            to="/doctor/audit"
+            class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+            active-class="bg-indigo-50 text-indigo-700 font-medium"
+            @click="mobileOpen = false"
+          >
+            Audit Log
           </router-link>
           <router-link
             to="/settings"
@@ -130,6 +140,13 @@
             >
               {{ totalUnread > 99 ? '99+' : totalUnread }}
             </span>
+          </router-link>
+          <router-link
+            to="/doctor/audit"
+            class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+            active-class="bg-indigo-50 text-indigo-700 font-medium"
+          >
+            Audit Log
           </router-link>
           <router-link
             to="/settings"

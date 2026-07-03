@@ -9,6 +9,7 @@ use App\Services\AI\ClinicalReasoningPipeline;
 use App\Services\AI\ContextAssembler;
 use App\Services\AI\EscalationDetector;
 use App\Services\AI\QaAssistant;
+use App\Services\ClinicalAlertNotifier;
 use Tests\TestCase;
 
 class EffortClassificationTest extends TestCase
@@ -26,6 +27,7 @@ class EffortClassificationTest extends TestCase
             $this->createMock(EscalationDetector::class),
             $this->createMock(AiTierManager::class),
             $this->createMock(ClinicalReasoningPipeline::class),
+            $this->createMock(ClinicalAlertNotifier::class),
         );
     }
 

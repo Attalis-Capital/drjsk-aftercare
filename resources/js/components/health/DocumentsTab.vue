@@ -41,8 +41,8 @@
             <option value="prescription">Prescription</option>
             <option value="other">Other</option>
           </select>
-          <button class="text-gray-400 hover:text-red-500 transition-colors" @click="pendingFiles.splice(i, 1)">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <button class="text-gray-400 hover:text-red-500 transition-colors" aria-label="Remove file" @click="pendingFiles.splice(i, 1)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -122,7 +122,7 @@
                 v-else-if="doc.analysis_status === 'analyzing'"
                 class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200/60 animate-pulse"
               >
-                Analyzing...
+                Analysing...
               </span>
               <AskAiButton @ask="askAboutDocument(doc)" />
 
@@ -368,7 +368,7 @@ async function deleteDocument() {
 function formatDate(dateStr: string): string {
     if (!dateStr) return '';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return d.toLocaleDateString('en-AU', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function formatSize(bytes: number): string {

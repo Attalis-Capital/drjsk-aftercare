@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Visit;
 use App\Services\AI\AnthropicClient;
 use App\Services\AI\ContextAssembler;
+use App\Services\ClinicalAlertNotifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -215,7 +216,51 @@ class DoctorController extends Controller
         // Sort alerts: high severity first
         usort($alerts, fn ($a, $b) => $a['severity'] === 'high' ? -1 : 1);
 
+        // B1 (#1718): close the clinical loop. Urgent triage verdicts and
+        // critical chat escalations were persisted as doctor-visible
+        // Notification rows. Surface them PINNED at the top of the single
+        // low-volume clinical queue, ahead of the derived observation alerts.
+        $clinicalAlerts = $this->clinicalAlertItems($request->user()->id);
+        $alerts = array_merge($clinicalAlerts, $alerts);
+
         return response()->json(['data' => $alerts]);
+    }
+
+    /**
+     * B1 (#1718): build pinned clinical-alert items from persisted
+     * Notification rows (urgent triage + critical chat) for this doctor.
+     * Newest first so the most recent urgent event is at the very top.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function clinicalAlertItems(string $doctorUserId): array
+    {
+        $notifications = Notification::where('user_id', $doctorUserId)
+            ->whereIn('type', [
+                ClinicalAlertNotifier::TYPE_URGENT_TRIAGE,
+                ClinicalAlertNotifier::TYPE_CRITICAL_CHAT,
+            ])
+            ->whereNull('read_at')
+            ->orderByDesc('created_at')
+            ->limit(50)
+            ->get();
+
+        return $notifications->map(function (Notification $n) {
+            $data = is_array($n->data) ? $n->data : [];
+
+            return [
+                'type' => $n->type,
+                'severity' => $n->severity ?: 'high',
+                'pinned' => true,
+                'notification_id' => $n->id,
+                'visit_id' => $n->visit_id,
+                'patient_id' => $data['patient_id'] ?? null,
+                'patient_name' => $data['patient_name'] ?? 'Patient',
+                'message' => $n->body,
+                'created_at' => $n->created_at,
+                'data' => $data,
+            ];
+        })->all();
     }
 
     public function patients(Request $request): JsonResponse
@@ -381,6 +426,48 @@ class DoctorController extends Controller
         $observations = $query->orderBy('effective_date', 'desc')->get();
 
         return response()->json(['data' => $observations]);
+    }
+
+    /**
+     * B2 (#1718): doctor-scoped documents/photos surface for a patient.
+     *
+     * Returns the patient's uploaded documents together with a triage class
+     * badge (urgent / needs-review) derived from the wound-photo triage events.
+     * Doctor-scoped and authorised by the doctor role middleware on the route
+     * group; no patient can reach this endpoint.
+     */
+    public function patientDocuments(Patient $patient): JsonResponse
+    {
+        $documents = \App\Models\Document::where('patient_id', $patient->id)
+            ->with('visit:id,started_at,reason_for_visit')
+            ->orderByDesc('document_date')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Map the latest triage verdict per document (wound-photo triage events).
+        $triageByDocument = \App\Models\TriageEvent::whereIn('document_id', $documents->pluck('id')->filter())
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy('document_id')
+            ->map(fn ($events) => $events->first()->verdict);
+
+        $data = $documents->map(function ($doc) use ($triageByDocument) {
+            return [
+                'id' => $doc->id,
+                'title' => $doc->title,
+                'document_type' => $doc->document_type,
+                'content_type' => $doc->content_type,
+                'document_date' => $doc->document_date?->toDateString(),
+                'created_at' => $doc->created_at,
+                'analysis_status' => $doc->analysis_status,
+                'visit_id' => $doc->visit_id,
+                'visit' => $doc->visit,
+                // Triage class badge: 'urgent', 'needs-review', or null.
+                'triage_class' => $triageByDocument[$doc->id] ?? null,
+            ];
+        });
+
+        return response()->json(['data' => $data]);
     }
 
     public function notifications(Request $request): JsonResponse

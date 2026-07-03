@@ -201,7 +201,12 @@
     </div>
 
     <!-- Disclaimer footer -->
-    <div :style="chatMarginStyle">
+    <!-- B5 (#1718): the fictional-data disclaimer, hackathon attribution, and
+         build hash are demo-only. Real pilot patients must never see their
+         records labelled fictional, so the entire block is gated behind the
+         demo-account guard. The disclaimer wording itself is unchanged (James
+         owns any replacement copy) - only its visibility is gated. -->
+    <div v-if="isDemoUser" :style="chatMarginStyle">
       <footer
         :class="[wide ? '' : 'max-w-6xl', 'mx-auto px-4 py-6 text-center']"
       >

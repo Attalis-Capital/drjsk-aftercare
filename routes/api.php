@@ -167,6 +167,7 @@ Route::prefix('v1')->group(function () {
             Route::get('patients/{patient}/engagement', [DoctorController::class, 'engagement']);
             Route::get('patients/{patient}/chat-audit', [DoctorController::class, 'chatAudit']);
             Route::get('patients/{patient}/observations', [DoctorController::class, 'patientObservations']);
+            Route::get('patients/{patient}/documents', [DoctorController::class, 'patientDocuments']);
             Route::get('notifications', [DoctorController::class, 'notifications']);
             Route::post('messages/{message}/reply', [DoctorController::class, 'reply']);
             Route::post('messages/{message}/inquire', [DoctorController::class, 'inquire'])->middleware(['ai.budget', 'throttle:ai-expensive']);

@@ -245,7 +245,7 @@
 
           <!-- Empty state -->
           <div v-if="!conditions.length && !medications.length && !allReferences.length" class="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-            <p class="text-gray-500">No personalized references available yet. Complete a visit to see relevant medical information here.</p>
+            <p class="text-gray-500">No personalised references available yet. Complete a visit to see relevant medical information here.</p>
           </div>
         </template>
       </div>
@@ -1076,7 +1076,7 @@ const fileInput = ref<HTMLInputElement | null>(null);
 
 const pipelineSteps: PipelineStep[] = [
     { key: 'extracting_text', label: 'Extracting text' },
-    { key: 'analyzing', label: 'Analyzing' },
+    { key: 'analyzing', label: 'Analysing' },
     { key: 'categorizing', label: 'Categorizing' },
     { key: 'relating', label: 'Relating to your health' },
     { key: 'verifying', label: 'Verifying' },
@@ -1191,7 +1191,7 @@ function toggleExpanded(itemId: string): void {
 const statusLabels: Record<string, string> = {
     pending: 'Pending',
     extracting_text: 'Extracting text',
-    analyzing: 'Analyzing',
+    analyzing: 'Analysing',
     categorizing: 'Categorizing',
     relating: 'Relating to your health',
     verifying: 'Verifying',

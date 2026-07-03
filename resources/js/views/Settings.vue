@@ -49,33 +49,13 @@
       </section>
 
       <!-- Data Governance -->
+      <!-- B4 (#1718): the mock Data Governance permission toggles were removed.
+           They persisted nowhere (local reactive state only) and gave patients a
+           false impression of control over data sharing. Only the real,
+           functioning data-export control is kept. -->
       <section>
         <h2 class="text-lg font-semibold text-gray-800 mb-3">Data Governance</h2>
         <div class="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100">
-          <div
-            v-for="perm in permissions"
-            :key="perm.key"
-            class="flex items-center justify-between px-5 py-4"
-          >
-            <div>
-              <p class="text-sm font-medium text-gray-900">{{ perm.label }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">{{ perm.description }}</p>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              :aria-checked="perm.enabled"
-              class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-              :class="perm.enabled ? 'bg-emerald-500' : 'bg-gray-200'"
-              @click="perm.enabled = !perm.enabled"
-            >
-              <span
-                class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                :class="perm.enabled ? 'translate-x-5' : 'translate-x-0'"
-              />
-            </button>
-          </div>
-
           <!-- Export button row -->
           <div class="flex items-center justify-between px-5 py-4">
             <div>
@@ -109,7 +89,12 @@
       </section>
 
       <!-- Audit Logs -->
-      <section>
+      <!-- B4 (#1718): the fabricated PHI audit table (invented actors, invented
+           timestamps) and the unsubstantiated "7-year HIPAA" retention claim
+           were removed. A real, backed audit trail exists for clinicians at the
+           doctor Audit Log page; patients are directed there rather than shown
+           fabricated rows. No fabricated audit data ships. -->
+      <section v-if="auth.isDoctor">
         <div class="flex items-center gap-3 mb-3">
           <h2 class="text-lg font-semibold text-gray-800">Audit Logs</h2>
           <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-blue-200/80 ring-inset">
@@ -119,40 +104,20 @@
             PHI Access Tracking
           </span>
         </div>
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th class="px-5 py-3">Timestamp</th>
-                <th class="px-5 py-3">Action</th>
-                <th class="px-5 py-3">Actor</th>
-                <th class="px-5 py-3 hidden sm:table-cell">Details</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-              <tr
-                v-for="(log, idx) in auditLogs"
-                :key="idx"
-                :class="idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'"
-              >
-                <td class="px-5 py-3 whitespace-nowrap text-gray-500 font-mono text-xs">{{ log.timestamp }}</td>
-                <td class="px-5 py-3">
-                  <span
-                    class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                    :class="actionBadgeClass(log.actionType)"
-                  >
-                    {{ log.action }}
-                  </span>
-                </td>
-                <td class="px-5 py-3 text-gray-900 font-medium">{{ log.actor }}</td>
-                <td class="px-5 py-3 text-gray-500 hidden sm:table-cell">{{ log.details }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="mt-2 text-xs text-gray-400">
-          Showing most recent entries. Full audit trail is retained for 7 years per HIPAA requirements.
-        </p>
+        <router-link
+          to="/doctor/audit"
+          class="block bg-white rounded-2xl border border-gray-200 hover:border-emerald-300 hover:shadow-md transition-all"
+        >
+          <div class="flex items-center justify-between px-5 py-4">
+            <div>
+              <p class="text-sm font-medium text-gray-900">View the access audit trail</p>
+              <p class="text-xs text-gray-500 mt-0.5">Real, recorded access events for patient health data</p>
+            </div>
+            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
+        </router-link>
       </section>
 
       <!-- Legal -->
@@ -177,7 +142,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import PatientLayout from '@/layouts/PatientLayout.vue';
 import DoctorLayout from '@/layouts/DoctorLayout.vue';
@@ -186,28 +151,6 @@ import AiTierSelector from '@/components/AiTierSelector.vue';
 const auth = useAuthStore();
 const layout = computed(() => auth.isDoctor ? DoctorLayout : PatientLayout);
 const exportToast = ref(false);
-
-// --- Document Permissions (mock state) ---
-const permissions = reactive([
-  {
-    key: 'share_doctor',
-    label: 'Share documents with my doctor',
-    description: 'Allow your care provider to view uploaded documents and visit summaries',
-    enabled: true,
-  },
-  {
-    key: 'ai_analysis',
-    label: 'Allow AI analysis of my documents',
-    description: 'Enable AI-powered insights, term explanations, and health recommendations',
-    enabled: true,
-  },
-  {
-    key: 'share_care_team',
-    label: 'Share health data with care team',
-    description: 'Let nurses, specialists, and other authorized staff access your records',
-    enabled: true,
-  },
-]);
 
 function exportData() {
   exportToast.value = true;
@@ -219,68 +162,4 @@ const legalLinks = [
   { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Legal Notice', to: '/legal' },
 ];
-
-// --- Audit Logs (mock data) ---
-const auditLogs = [
-  {
-    timestamp: '2026-02-11 14:32',
-    action: 'Viewed',
-    actionType: 'view',
-    actor: 'Dr. Moreau',
-    details: 'Accessed SOAP note for post-operative follow-up visit',
-  },
-  {
-    timestamp: '2026-02-11 14:30',
-    action: 'AI Analysis',
-    actionType: 'ai',
-    actor: 'DrJSK AfterCare AI',
-    details: 'Completed analysis of uploaded ECG document',
-  },
-  {
-    timestamp: '2026-02-11 09:15',
-    action: 'Accessed',
-    actionType: 'view',
-    actor: 'Anna Kowalska',
-    details: 'Opened chat session for visit #1042',
-  },
-  {
-    timestamp: '2026-02-10 16:45',
-    action: 'Exported',
-    actionType: 'export',
-    actor: 'Anna Kowalska',
-    details: 'Downloaded visit summary as PDF',
-  },
-  {
-    timestamp: '2026-02-10 11:20',
-    action: 'Modified',
-    actionType: 'modify',
-    actor: 'Dr. Moreau',
-    details: 'Updated medication dosage in prescriptions',
-  },
-  {
-    timestamp: '2026-02-09 08:30',
-    action: 'AI Analysis',
-    actionType: 'ai',
-    actor: 'DrJSK AfterCare AI',
-    details: 'Generated term explanations for lab results panel',
-  },
-  {
-    timestamp: '2026-02-08 14:10',
-    action: 'Shared',
-    actionType: 'share',
-    actor: 'Dr. Moreau',
-    details: 'Shared visit notes with referring general practitioner',
-  },
-];
-
-function actionBadgeClass(type) {
-  const classes = {
-    view: 'bg-blue-50 text-blue-700',
-    ai: 'bg-purple-50 text-purple-700',
-    export: 'bg-amber-50 text-amber-700',
-    modify: 'bg-emerald-50 text-emerald-700',
-    share: 'bg-indigo-50 text-indigo-700',
-  };
-  return classes[type] || 'bg-gray-50 text-gray-700';
-}
 </script>

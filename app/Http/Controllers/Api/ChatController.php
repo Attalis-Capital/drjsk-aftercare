@@ -85,6 +85,13 @@ class ChatController extends Controller
                             echo 'data: '.json_encode(['thinking' => $content])."\n\n";
                         } elseif ($type === 'phase') {
                             echo 'data: '.json_encode(['phase' => $content])."\n\n";
+                        } elseif ($type === 'urgent') {
+                            // B6 (#1718): urgent escalation gets a distinct
+                            // marker so the chat surface can render it as an
+                            // unmistakable alert, not an ordinary bubble. The
+                            // message text itself is unchanged (frozen copy).
+                            $fullResponse .= $content;
+                            echo 'data: '.json_encode(['text' => $content, 'urgent' => true])."\n\n";
                         } else {
                             $fullResponse .= $content;
                             echo 'data: '.json_encode(['text' => $content])."\n\n";

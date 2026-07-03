@@ -3,6 +3,7 @@
 namespace App\Services\AI;
 
 use App\Models\ChatSession;
+use App\Services\ClinicalAlertNotifier;
 use Generator;
 
 class QaAssistant
@@ -68,6 +69,7 @@ class QaAssistant
         private EscalationDetector $escalationDetector,
         private AiTierManager $tierManager,
         private ClinicalReasoningPipeline $reasoningPipeline,
+        private ClinicalAlertNotifier $alertNotifier,
     ) {}
 
     /**
@@ -164,7 +166,16 @@ class QaAssistant
         // Check for urgent content before answering
         $escalation = $this->escalationDetector->evaluate($question, $visit);
         if ($escalation['is_urgent'] && $escalation['severity'] === 'critical') {
-            yield ['type' => 'text', 'content' => $escalation['recommended_action']];
+            // B1 (#1718): close the clinical loop. A critical chat escalation
+            // must create a doctor-visible alert, pinned at the top of the
+            // DoctorDashboard alert panel. Surfacing only - the escalation
+            // decision was already made by EscalationDetector upstream. An
+            // alert-write failure must never block the patient-facing response.
+            if ($visit !== null) {
+                $this->alertNotifier->criticalChat($visit, $escalation['reason'] ?? null);
+            }
+
+            yield ['type' => 'urgent', 'content' => $escalation['recommended_action']];
 
             return;
         }

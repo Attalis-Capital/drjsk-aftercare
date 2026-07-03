@@ -6,6 +6,7 @@ use App\Jobs\AnalyzeDocumentJob;
 use App\Models\Document;
 use App\Models\UploadToken;
 use App\Services\AI\TriageService;
+use App\Services\ClinicalAlertNotifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,6 +16,7 @@ class MobileUploadController extends Controller
 {
     public function __construct(
         private TriageService $triageService,
+        private ClinicalAlertNotifier $alertNotifier,
     ) {}
 
     public function show(string $token): View
@@ -104,6 +106,18 @@ class MobileUploadController extends Controller
             }
         } elseif (in_array($contentType, ['image', 'pdf'])) {
             AnalyzeDocumentJob::dispatch($document);
+        }
+
+        // B1 (#1718): close the clinical loop. An urgent triage verdict must
+        // create a doctor-visible alert, surfaced pinned at the top of the
+        // DoctorDashboard alert panel. Surfacing only - the triage decision was
+        // already made upstream. Alert-write failure never blocks the upload.
+        if ($triage !== null && ! empty($triage['is_urgent']) && $visit !== null) {
+            $this->alertNotifier->urgentTriage(
+                $visit,
+                $document->id,
+                $triage['reason'] ?? null,
+            );
         }
 
         $uploadToken->markUsed($document);

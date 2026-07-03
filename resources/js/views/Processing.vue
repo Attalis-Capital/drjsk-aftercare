@@ -5,7 +5,7 @@
 
       <div class="space-y-2">
         <h1 class="text-2xl font-semibold text-gray-800">
-          {{ insufficientContent ? 'Not enough content' : failed ? 'Processing failed' : 'Analyzing your visit...' }}
+          {{ insufficientContent ? 'Not enough content' : failed ? 'Processing failed' : 'Analysing your visit...' }}
         </h1>
         <p class="text-gray-500 text-sm">{{ currentStep.label }}</p>
       </div>

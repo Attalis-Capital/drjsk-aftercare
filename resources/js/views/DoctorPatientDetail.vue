@@ -78,7 +78,7 @@
                           : 'bg-amber-100 text-amber-700'
                       ]"
                     >
-                      {{ alert.type === 'weight_gain' ? 'Weight Alert' : 'BP Trend' }}
+                      {{ alertLabel(alert.type) }}
                     </span>
                   </div>
                   <p class="text-sm text-gray-600 mt-1">{{ alert.message }}</p>
@@ -281,7 +281,7 @@
                       @click="startInquiry(notif)"
                     >
                       <img src="/images/logo-icon.png" alt="" class="h-3.5 w-auto" />
-                      {{ inquiringId === notif.id && inquiryStreaming ? 'Analyzing...' : 'Investigate' }}
+                      {{ inquiringId === notif.id && inquiryStreaming ? 'Analysing...' : 'Investigate' }}
                     </button>
                     <button
                       v-if="notif.type !== 'doctor_reply'"
@@ -333,9 +333,10 @@
                   <button
                     v-else
                     class="ml-auto text-violet-400 hover:text-violet-600 transition-colors"
+                    aria-label="Dismiss analysis"
                     @click="dismissInquiry(notif.id)"
                   >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
                 <div class="text-sm text-violet-900 prose prose-sm max-w-none prose-headings:text-violet-800 prose-headings:text-sm prose-headings:font-semibold prose-li:text-violet-900 prose-strong:text-violet-800" v-html="renderMarkdown(inquiryResults[notif.id] || '')"></div>
@@ -350,6 +351,72 @@
 
       <!-- Labs Tab -->
       <LabResultsTab v-if="activeTab === 'labs'" :observations="allObservations" />
+
+      <!-- B2 (#1718): Documents / photos surface with triage class badges. -->
+      <div v-if="activeTab === 'documents'" class="space-y-4">
+        <!-- B3: failed fetch renders a distinct error banner with retry. -->
+        <div
+          v-if="documentsError"
+          role="alert"
+          class="rounded-2xl border border-red-300 bg-red-50 p-4 flex items-start justify-between gap-3"
+        >
+          <div>
+            <p class="font-semibold text-red-800">Could not load documents</p>
+            <p class="text-sm text-red-700">{{ documentsError }}</p>
+          </div>
+          <button
+            class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-red-300 text-red-700 hover:bg-red-100 transition-colors"
+            @click="fetchDocuments()"
+          >
+            Retry
+          </button>
+        </div>
+
+        <div v-else-if="documentsLoading" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
+          Loading documents...
+        </div>
+
+        <div v-else-if="documents.length === 0" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
+          No documents uploaded for this patient.
+        </div>
+
+        <div v-else class="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-50">
+          <div
+            v-for="doc in documents"
+            :key="doc.id"
+            class="flex items-center gap-4 p-4"
+          >
+            <div class="w-10 h-10 rounded-lg bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
+              <svg v-if="doc.content_type === 'image'" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="font-medium text-gray-900 truncate">{{ doc.title }}</p>
+                <span
+                  v-if="triageBadge(doc.triage_class)"
+                  :class="['inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold', triageBadge(doc.triage_class).class]"
+                >
+                  {{ triageBadge(doc.triage_class).label }}
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 mt-0.5">
+                {{ formatDocType(doc.document_type) }}
+                <span v-if="doc.document_date"> &middot; {{ formatShortDate(doc.document_date) }}</span>
+              </p>
+            </div>
+            <a
+              :href="documentDownloadUrl(doc)"
+              target="_blank"
+              rel="noopener"
+              :aria-label="`Open ${doc.title}`"
+              class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Open
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <ScheduleInvitationModal
@@ -363,6 +430,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { alertLabel } from '@/utils/alerts';
 import axios from 'axios';
 import { useApi } from '@/composables/useApi';
 import { useAuthStore } from '@/stores/auth';
@@ -403,11 +471,16 @@ const tabs = [
     { id: 'overview', label: 'Overview' },
     { id: 'vitals', label: 'Vitals' },
     { id: 'labs', label: 'Labs' },
+    { id: 'documents', label: 'Documents' },
 ];
 
 const patient = ref(null);
 const visits = ref([]);
 const allObservations = ref([]);
+// B2 (#1718): doctor-side documents/photos surface.
+const documents = ref([]);
+const documentsLoading = ref(false);
+const documentsError = ref(null);
 
 // Chart data derived from allObservations (matching VitalsTab style)
 const weightData = computed(() =>
@@ -441,14 +514,28 @@ const hrChartData = computed(() => ({
     }],
 }));
 
-const hrChartOptions = {
+// S16 (#1718): derive HR axis bounds from the data (with padding) so post-op
+// tachycardia above the old hard 110 bpm cap renders on-chart instead of being
+// clipped. Falls back to a sensible default range when there is no data.
+const hrYRange = computed(() => {
+    const vals = hrData.value.map(o => parseFloat(o.value_quantity)).filter(v => !Number.isNaN(v));
+    if (!vals.length) return { min: 50, max: 110 };
+    const lo = Math.min(...vals);
+    const hi = Math.max(...vals);
+    return {
+        min: Math.min(50, Math.floor((lo - 5) / 5) * 5),
+        max: Math.max(110, Math.ceil((hi + 5) / 5) * 5),
+    };
+});
+
+const hrChartOptions = computed(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: { legend: { display: false } },
     scales: {
-        y: { min: 50, max: 110, title: { display: true, text: 'bpm' } },
+        y: { min: hrYRange.value.min, max: hrYRange.value.max, title: { display: true, text: 'bpm' } },
     },
-};
+}));
 
 const weightValues = computed(() =>
     weightData.value.map(o => parseFloat(o.value_quantity))
@@ -586,7 +673,27 @@ const bpChartData = computed(() => ({
     ],
 }));
 
-const bpChartOptions = {
+// S16 (#1718): derive BP axis bounds from the data (with padding) so a
+// hypertensive crisis above the old hard 180 mmHg cap renders on-chart instead
+// of being clipped. Falls back to a sensible default range when there is no data.
+const bpYRange = computed(() => {
+    const vals = [];
+    bpData.value.forEach(o => {
+        const s = o.specialty_data?.systolic?.value;
+        const d = o.specialty_data?.diastolic?.value;
+        if (s != null && !Number.isNaN(+s)) vals.push(+s);
+        if (d != null && !Number.isNaN(+d)) vals.push(+d);
+    });
+    if (!vals.length) return { min: 60, max: 180 };
+    const lo = Math.min(...vals);
+    const hi = Math.max(...vals);
+    return {
+        min: Math.min(60, Math.floor((lo - 10) / 10) * 10),
+        max: Math.max(180, Math.ceil((hi + 10) / 10) * 10),
+    };
+});
+
+const bpChartOptions = computed(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -594,13 +701,13 @@ const bpChartOptions = {
         tooltip: { mode: 'index', intersect: false },
     },
     scales: {
-        y: { min: 60, max: 180, title: { display: true, text: 'mmHg' } },
+        y: { min: bpYRange.value.min, max: bpYRange.value.max, title: { display: true, text: 'mmHg' } },
     },
-};
+}));
 
 function formatShortDate(d) {
     if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return new Date(d).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
 }
 
 const chatSessions = ref([]);
@@ -654,9 +761,41 @@ onMounted(async () => {
     }
 
     await fetchNotifications();
+    await fetchDocuments();
 
     doctorStore.fetchAlerts();
 });
+
+// B2 (#1718): fetch the patient's uploaded documents (with triage class badges)
+// via the doctor-scoped documents endpoint. A failed fetch records an error and
+// is shown as a distinct banner (B3), never a silent empty state.
+async function fetchDocuments() {
+    documentsLoading.value = true;
+    documentsError.value = null;
+    try {
+        const res = await api.get(`/doctor/patients/${route.params.id}/documents`);
+        documents.value = res.data.data;
+    } catch (err) {
+        documentsError.value = err.response?.data?.error?.message || 'Failed to load documents';
+    } finally {
+        documentsLoading.value = false;
+    }
+}
+
+function triageBadge(cls) {
+    if (cls === 'urgent') return { label: 'Urgent', class: 'bg-red-100 text-red-700 border border-red-200' };
+    if (cls === 'needs-review') return { label: 'Needs review', class: 'bg-amber-100 text-amber-700 border border-amber-200' };
+    return null;
+}
+
+function documentDownloadUrl(doc) {
+    return `/api/v1/documents/${doc.id}/download`;
+}
+
+function formatDocType(type) {
+    if (!type) return 'Document';
+    return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
 
 async function fetchNotifications() {
     loadingNotifications.value = true;
@@ -785,9 +924,10 @@ function formatVisitType(type) {
     return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
+// S7 (#1718): Australian English locale for date/time formatting.
 function formatDateTime(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', {
+    return new Date(dateStr).toLocaleDateString('en-AU', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -798,7 +938,7 @@ function formatDateTime(dateStr) {
 
 function formatTime(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleTimeString('en-US', {
+    return new Date(dateStr).toLocaleTimeString('en-AU', {
         hour: '2-digit',
         minute: '2-digit',
     });

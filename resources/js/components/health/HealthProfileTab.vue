@@ -315,7 +315,7 @@ const allergies = computed(() => {
 
 function formatDate(d) {
     if (!d) return '';
-    return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(d).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function severityClass(severity) {
