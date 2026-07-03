@@ -73,8 +73,27 @@
         </div>
       </div>
 
+      <!-- B3 (#1718): a failed fetch renders a distinct error banner with retry,
+           never the empty "No audit entries" state. -->
+      <div
+        v-if="error"
+        role="alert"
+        class="rounded-2xl border border-red-300 bg-red-50 p-4 flex items-start justify-between gap-3"
+      >
+        <div>
+          <p class="font-semibold text-red-800">Could not load audit logs</p>
+          <p class="text-sm text-red-700">{{ error }}</p>
+        </div>
+        <button
+          class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-red-300 text-red-700 hover:bg-red-100 transition-colors"
+          @click="fetchLogs()"
+        >
+          Retry
+        </button>
+      </div>
+
       <!-- Loading -->
-      <div v-if="loading && !logs.length" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
+      <div v-else-if="loading && !logs.length" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
         Loading audit logs...
       </div>
 
@@ -88,7 +107,7 @@
       </div>
 
       <!-- Log table -->
-      <div v-else class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div v-else-if="!error" class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead class="bg-gray-50 border-b border-gray-200">
@@ -152,12 +171,20 @@
                   <span v-else class="text-gray-300 text-xs">&mdash;</span>
                 </td>
                 <td class="px-4 py-3">
+                  <!-- S19 (#1718): non-colour status indicator (text + icon),
+                       not colour alone. -->
                   <span
                     :class="[
-                      'inline-flex w-2 h-2 rounded-full',
-                      log.success ? 'bg-emerald-400' : 'bg-red-400'
+                      'inline-flex items-center gap-1 text-xs font-medium',
+                      log.success ? 'text-emerald-700' : 'text-red-700'
                     ]"
-                  />
+                  >
+                    <span
+                      :class="['inline-flex w-2 h-2 rounded-full', log.success ? 'bg-emerald-400' : 'bg-red-400']"
+                      aria-hidden="true"
+                    />
+                    {{ log.success ? 'Success' : 'Failed' }}
+                  </span>
                 </td>
                 <td class="px-4 py-3 text-xs text-gray-400 font-mono">{{ log.ip_address }}</td>
               </tr>
@@ -200,12 +227,14 @@ import DoctorLayout from '@/layouts/DoctorLayout.vue';
 const api = useApi();
 const loading = ref(false);
 const exporting = ref(false);
+const error = ref(null);
 const logs = ref([]);
 const filters = reactive({ action_type: '', resource_type: '' });
 const pagination = reactive({ currentPage: 1, lastPage: 1, total: 0 });
 
 async function fetchLogs(page = 1) {
     loading.value = true;
+    error.value = null;
     try {
         const params = { per_page: 30, page };
         if (filters.action_type) params.action_type = filters.action_type;
@@ -217,7 +246,10 @@ async function fetchLogs(page = 1) {
         pagination.currentPage = paginated.current_page;
         pagination.lastPage = paginated.last_page;
         pagination.total = paginated.total;
-    } catch {
+    } catch (err) {
+        // B3 (#1718): record the error so a failed fetch is visually distinct
+        // from a genuine empty log.
+        error.value = err.response?.data?.error?.message || 'Failed to load audit logs';
         logs.value = [];
     } finally {
         loading.value = false;
@@ -266,7 +298,7 @@ function formatTime(dateStr) {
     if (diffMin < 60) return `${diffMin}m ago`;
     if (diffMin < 1440) return `${Math.floor(diffMin / 60)}h ago`;
 
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
 function formatResource(type) {

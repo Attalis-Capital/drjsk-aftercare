@@ -3,8 +3,32 @@
     <div class="space-y-8">
       <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
 
+      <!-- B3 (#1718): failed alerts fetch renders a distinct error banner with a
+           retry action - never a green all-clear. -->
+      <div
+        v-if="doctorStore.alertsError"
+        role="alert"
+        class="rounded-2xl border border-red-300 bg-red-50 p-4 flex items-start justify-between gap-3"
+      >
+        <div class="flex items-start gap-2">
+          <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <div>
+            <p class="font-semibold text-red-800">Could not load alerts</p>
+            <p class="text-sm text-red-700">{{ doctorStore.alertsError }} - patient alerts may be missing. This is not an all-clear.</p>
+          </div>
+        </div>
+        <button
+          class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-red-300 text-red-700 hover:bg-red-100 transition-colors"
+          @click="doctorStore.fetchAlerts()"
+        >
+          Retry
+        </button>
+      </div>
+
       <!-- Alert Panel -->
-      <section v-if="doctorStore.alerts.length > 0 || doctorStore.alertsLoading">
+      <section v-else-if="doctorStore.alerts.length > 0 || doctorStore.alertsLoading">
         <h2 class="text-lg font-semibold text-red-700 mb-3 flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -41,6 +65,12 @@
                   >
                     {{ alertLabel(alert.type) }}
                   </span>
+                  <span
+                    v-if="alert.pinned"
+                    class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide bg-red-600 text-white"
+                  >
+                    Pinned
+                  </span>
                 </div>
                 <p class="font-semibold text-gray-900">{{ alert.patient_name }}</p>
                 <p class="text-sm text-gray-600 mt-1">{{ alert.message }}</p>
@@ -70,7 +100,7 @@
 
               <button
                 class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
-                @click="scrollToPatient(alert.patient_id)"
+                @click="viewAlertPatient(alert.patient_id)"
               >
                 View
               </button>
@@ -79,7 +109,7 @@
         </div>
       </section>
 
-      <div v-else-if="!doctorStore.alertsLoading" class="bg-emerald-50 rounded-2xl border border-emerald-200 p-4 text-sm text-emerald-700">
+      <div v-else-if="!doctorStore.alertsLoading && !doctorStore.alertsError" class="bg-emerald-50 rounded-2xl border border-emerald-200 p-4 text-sm text-emerald-700">
         No alerts at this time.
       </div>
 
@@ -179,10 +209,13 @@
 
 <script setup>
 import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useDoctorStore } from '@/stores/doctor';
+import { alertLabel } from '@/utils/alerts';
 import DoctorLayout from '@/layouts/DoctorLayout.vue';
 
 const doctorStore = useDoctorStore();
+const router = useRouter();
 
 const recentPatients = computed(() => doctorStore.patients.slice(0, 3));
 
@@ -199,19 +232,20 @@ function initials(patient) {
     return (f + l).toUpperCase() || '?';
 }
 
-function alertLabel(type) {
-    if (type === 'weight_gain') return 'Weight Alert';
-    if (type === 'hr_drop') return 'Heart Rate';
-    return 'BP Trend';
-}
-
-function scrollToPatient(patientId) {
+// S15 (#1718): the View button navigates to the patient detail when the patient
+// is outside the recentPatients list (previously it dead-ended by only
+// scrolling to an element that was not rendered). Scroll if visible, otherwise
+// route to the detail page.
+function viewAlertPatient(patientId) {
+    if (!patientId) return;
     const el = document.getElementById(`patient-${patientId}`);
     if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         el.classList.add('ring-2', 'ring-red-400', 'bg-red-50/40');
         setTimeout(() => el.classList.remove('ring-2', 'ring-red-400', 'bg-red-50/40'), 2000);
+        return;
     }
+    router.push(`/doctor/patients/${patientId}`);
 }
 
 function avatarClasses(patient) {

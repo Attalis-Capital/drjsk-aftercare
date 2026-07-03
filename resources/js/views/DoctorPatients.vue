@@ -7,12 +7,32 @@
           v-model="search"
           type="text"
           placeholder="Search patients..."
+          aria-label="Search patients"
           class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none w-64"
           @input="handleSearch"
         />
       </div>
 
-      <div v-if="doctorStore.loading" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
+      <!-- B3 (#1718): failed patients fetch renders a distinct error banner with
+           a retry action, never a silent empty state. -->
+      <div
+        v-if="doctorStore.patientsError"
+        role="alert"
+        class="rounded-2xl border border-red-300 bg-red-50 p-4 flex items-start justify-between gap-3"
+      >
+        <div>
+          <p class="font-semibold text-red-800">Could not load patients</p>
+          <p class="text-sm text-red-700">{{ doctorStore.patientsError }}</p>
+        </div>
+        <button
+          class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-red-300 text-red-700 hover:bg-red-100 transition-colors"
+          @click="doctorStore.fetchPatients(search)"
+        >
+          Retry
+        </button>
+      </div>
+
+      <div v-else-if="doctorStore.loading" class="bg-white rounded-2xl border border-gray-200 p-12 text-center text-gray-400">
         Loading patients...
       </div>
 
@@ -21,7 +41,7 @@
       </div>
 
       <!-- Patient table -->
-      <div v-else class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div v-else-if="!doctorStore.patientsError" class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <table class="w-full">
           <thead>
             <tr class="border-b border-gray-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -112,10 +132,11 @@
               <td class="px-5 py-4 text-right">
                 <div class="flex items-center justify-end gap-1">
                   <button
-                    v-for="action in quickActions.slice(0, 2)"
+                    v-for="action in quickActions"
                     :key="action.label"
                     class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-emerald-50 hover:text-emerald-700 transition-colors whitespace-nowrap"
                     :title="action.label"
+                    :aria-label="action.label"
                     @click="handleQuickAction(action.label, patient)"
                   >
                     <span class="w-4 h-4 shrink-0" v-html="action.icon"></span>
@@ -123,6 +144,7 @@
                   </button>
                   <router-link
                     :to="`/doctor/patients/${patient.id}`"
+                    :aria-label="`View ${patient.first_name} ${patient.last_name}`"
                     class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-indigo-50 hover:text-indigo-700 transition-colors whitespace-nowrap"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
@@ -145,7 +167,7 @@
             <div class="flex items-center justify-between mb-5">
               <div>
                 <h3 class="text-lg font-semibold text-gray-900">
-                  {{ activeModal === 'schedule_followup' ? 'Schedule Follow-up' : activeModal === 'renew_prescription' ? 'Renew Prescription' : activeModal === 'send_recommendation' ? 'Send Recommendation' : 'Request Labs' }}
+                  {{ activeModal === 'schedule_followup' ? 'Schedule Follow-up' : activeModal === 'renew_prescription' ? 'Renew Prescription' : 'Send Recommendation' }}
                 </h3>
                 <p class="text-sm text-gray-500 mt-0.5">{{ modalPatient?.first_name }} {{ modalPatient?.last_name }}</p>
               </div>
@@ -216,28 +238,6 @@
               </div>
             </div>
 
-            <!-- Request Labs -->
-            <div v-if="activeModal === 'request_labs'" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Lab Panel</label>
-                <select v-model="selectedPanel" @change="applyLabPanel"
-                  class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none">
-                  <option value="">Custom selection</option>
-                  <option v-for="panel in labPanels" :key="panel.id" :value="panel.id">{{ panel.label }}</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Individual Tests</label>
-                <div class="flex flex-wrap gap-2">
-                  <button v-for="lab in allLabTests" :key="lab"
-                    :class="['px-3 py-2 rounded-xl text-sm font-medium border transition-colors', selectedLabs.includes(lab) ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'border-gray-200 text-gray-600 hover:border-emerald-300']"
-                    @click="toggleLab(lab); selectedPanel = ''">
-                    {{ lab }}
-                  </button>
-                </div>
-              </div>
-            </div>
-
             <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
               <button @click="closeModal" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors">
                 Cancel
@@ -277,29 +277,15 @@ const followupNote = ref('');
 const prescriptionMed = ref('');
 const prescriptionDays = ref(null);
 const recommendationMsg = ref('');
-const selectedLabs = ref([]);
 const showOtherMed = ref(false);
-const selectedPanel = ref('');
 
 const patientMedications = computed(() => modalPatient.value?.active_medications || []);
-
-const allLabTests = ['CBC', 'BMP', 'CMP', 'Lipid Panel', 'HbA1c', 'TSH', 'T3/T4', 'BNP', 'Troponin', 'eGFR', 'Urinalysis', 'INR'];
-
-const labPanels = [
-    { id: 'cardiac', label: 'Cardiac Panel', tests: ['CBC', 'BMP', 'BNP', 'Troponin', 'Lipid Panel'] },
-    { id: 'metabolic', label: 'Comprehensive Metabolic (CMP)', tests: ['CMP', 'CBC'] },
-    { id: 'lipid', label: 'Lipid Panel', tests: ['Lipid Panel', 'HbA1c'] },
-    { id: 'thyroid', label: 'Thyroid Panel', tests: ['TSH', 'T3/T4'] },
-    { id: 'renal', label: 'Renal Panel', tests: ['BMP', 'eGFR', 'Urinalysis'] },
-    { id: 'coag', label: 'Coagulation Panel', tests: ['CBC', 'INR'] },
-];
 
 const canSubmit = computed(() => {
     if (!activeModal.value) return false;
     if (activeModal.value === 'schedule_followup') return !!followupTimeframe.value;
     if (activeModal.value === 'renew_prescription') return !!prescriptionMed.value && !!prescriptionDays.value;
     if (activeModal.value === 'send_recommendation') return !!recommendationMsg.value.trim();
-    if (activeModal.value === 'request_labs') return selectedLabs.value.length > 0;
     return false;
 });
 
@@ -319,18 +305,15 @@ const quickActions = [
         short: 'Message',
         icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>',
     },
-    {
-        label: 'Request Labs',
-        short: 'Labs',
-        icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>',
-    },
 ];
 
+// S18 (#1718): the US-centric "Request Labs" quick action and its cardiac/US
+// lab panel list (CBC/BMP/CMP/BNP/Troponin/etc.) were removed - not relevant to
+// a plastic-surgery post-op recovery pilot.
 const ACTION_MAP = {
     'Schedule Follow-up': 'schedule_followup',
     'Renew Prescription': 'renew_prescription',
     'Send Recommendation': 'send_recommendation',
-    'Request Labs': 'request_labs',
 };
 
 function handleQuickAction(label, patient) {
@@ -346,8 +329,6 @@ function handleQuickAction(label, patient) {
     prescriptionDays.value = null;
     showOtherMed.value = false;
     recommendationMsg.value = '';
-    selectedLabs.value = [];
-    selectedPanel.value = '';
 }
 
 function closeModal() {
@@ -371,9 +352,6 @@ async function submitQuickAction() {
     } else if (activeModal.value === 'send_recommendation') {
         if (!recommendationMsg.value.trim()) return;
         payload.message = recommendationMsg.value;
-    } else if (activeModal.value === 'request_labs') {
-        if (selectedLabs.value.length === 0) return;
-        payload.labs = selectedLabs.value;
     }
 
     if (modalPatient.value.latest_visit_id) {
@@ -392,20 +370,6 @@ async function submitQuickAction() {
     }
 }
 
-function toggleLab(lab) {
-    const idx = selectedLabs.value.indexOf(lab);
-    if (idx >= 0) {
-        selectedLabs.value.splice(idx, 1);
-    } else {
-        selectedLabs.value.push(lab);
-    }
-}
-
-function applyLabPanel() {
-    const panel = labPanels.find(p => p.id === selectedPanel.value);
-    selectedLabs.value = panel ? [...panel.tests] : [];
-}
-
 let debounceTimer = null;
 function handleSearch() {
     clearTimeout(debounceTimer);
@@ -417,7 +381,7 @@ function handleSearch() {
 function formatDate(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function formatWeight(w) {

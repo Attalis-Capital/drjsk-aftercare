@@ -12,6 +12,25 @@
         Loading visit data...
       </div>
 
+      <!-- B3 (#1718): a failed fetch renders a distinct error banner with retry,
+           never the "Visit not found" all-clear state. -->
+      <div
+        v-else-if="error"
+        role="alert"
+        class="rounded-2xl border border-red-300 bg-red-50 p-4 flex items-start justify-between gap-3"
+      >
+        <div>
+          <p class="font-semibold text-red-800">Could not load visit</p>
+          <p class="text-sm text-red-700">{{ error }}</p>
+        </div>
+        <button
+          class="shrink-0 inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg bg-white border border-red-300 text-red-700 hover:bg-red-100 transition-colors"
+          @click="loadVisit()"
+        >
+          Retry
+        </button>
+      </div>
+
       <template v-else-if="visit">
         <!-- Visit header -->
         <div class="bg-white rounded-2xl border border-gray-200 p-6">
@@ -273,6 +292,7 @@ const api = useApi();
 
 const visit = ref(null);
 const loading = ref(true);
+const error = ref(null);
 
 const visitNote = computed(() => visit.value?.visit_note || null);
 
@@ -294,16 +314,22 @@ const extractedEntities = computed(() => {
     return Array.isArray(entities) ? entities : [];
 });
 
-onMounted(async () => {
+async function loadVisit() {
+    loading.value = true;
+    error.value = null;
     try {
         const res = await api.get(`/doctor/patients/${route.params.patientId}/visits/${route.params.visitId}`);
         visit.value = res.data.data;
-    } catch {
-        // Handled by API interceptor
+    } catch (err) {
+        // B3 (#1718): record the error so a failed fetch is distinct from a
+        // genuine "visit not found" state.
+        error.value = err.response?.data?.error?.message || 'Failed to load visit';
     } finally {
         loading.value = false;
     }
-});
+}
+
+onMounted(loadVisit);
 
 function formatVisitType(type) {
     if (!type) return 'Visit';
@@ -312,10 +338,10 @@ function formatVisitType(type) {
 
 function formatDateTime(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
+    return new Date(dateStr).toLocaleDateString('en-AU', {
         day: 'numeric',
+        month: 'long',
+        year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
     });
@@ -323,7 +349,7 @@ function formatDateTime(dateStr) {
 
 function formatDate(dateStr) {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function termCategoryClass(category) {

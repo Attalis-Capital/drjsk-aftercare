@@ -38,6 +38,7 @@ export const useChatStore = defineStore('chat', {
                 thinkingPhase: true,
                 streaming: true,
                 effort: null,
+                urgent: false,
             });
 
             try {
@@ -120,6 +121,12 @@ export const useChatStore = defineStore('chat', {
                                         this.messages[aiIndex].thinkingPhase = false;
                                     }
                                     this.messages[aiIndex].content += parsed.text;
+                                    // B6 (#1718): mark critical escalations so the
+                                    // chat surface renders them as an unmistakable
+                                    // alert rather than an ordinary bubble.
+                                    if (parsed.urgent) {
+                                        this.messages[aiIndex].urgent = true;
+                                    }
                                 }
                             } catch {
                                 // skip malformed chunks
