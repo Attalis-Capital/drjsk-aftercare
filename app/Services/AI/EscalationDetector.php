@@ -42,11 +42,27 @@ class EscalationDetector
         'vision loss', 'can\'t see', 'sudden blindness',
     ];
 
+    // The single source of truth for the critical-severity patient-facing action
+    // string (surgeon-confirmed practice number + 000). Both the keyword path and
+    // the #1701 wound-triage urgent path reuse THIS constant so the copy never
+    // diverges. Do not inline this string elsewhere.
+    public const CRITICAL_RECOMMENDED_ACTION = 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
+
     public function __construct(
         private AnthropicClient $client,
         private PromptLoader $promptLoader,
         private AiTierManager $tierManager,
     ) {}
+
+    /**
+     * The patient-facing critical-severity response (practice number + 000).
+     * Reused by the #1701 wound-triage urgent path (decision D5) so the urgent
+     * copy is identical to the #1708 chat escalation copy.
+     */
+    public function criticalRecommendedAction(): string
+    {
+        return self::CRITICAL_RECOMMENDED_ACTION;
+    }
 
     /**
      * Evaluate a patient message for urgency.
@@ -90,7 +106,7 @@ class EscalationDetector
                     'severity' => 'critical',
                     'reason' => "Message contains critical symptom: '{$keyword}'",
                     'trigger_phrases' => [$keyword],
-                    'recommended_action' => 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.',
+                    'recommended_action' => self::CRITICAL_RECOMMENDED_ACTION,
                     'context_factors' => [],
                 ];
             }
