@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- #1723: staging noindex (non-production only). --}}
+    @if(strtolower((string) config('app.env')) !== 'production')
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    @endif
     <title>Upload Photo - DrJSK AfterCare</title>
     <style>
         /* S11 (#1718): brand token layer aligned to drjsk.com.au (soft blue-grey)

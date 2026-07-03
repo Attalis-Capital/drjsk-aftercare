@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AiBudgetMiddleware;
 use App\Http\Middleware\AuditMiddleware;
+use App\Http\Middleware\NoIndex;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -25,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->trustProxies(at: '*');
         $middleware->statefulApi();
+
+        // #1723: noindex on non-production responses (staging must not be indexed).
+        $middleware->append(NoIndex::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $e, Request $request) {
