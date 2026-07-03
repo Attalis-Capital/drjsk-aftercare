@@ -27,8 +27,21 @@ class AnthropicClient
     {
         $this->client = new Client(
             apiKey: config('anthropic.api_key'),
+            baseUrl: config('anthropic.base_url'),
         );
-        $this->defaultModel = config('anthropic.default_model', 'claude-opus-4-6');
+        $this->defaultModel = config('anthropic.default_model', 'claude-opus-4-8');
+    }
+
+    /**
+     * Anthropic-compatible /v1/messages endpoint. Honours anthropic.base_url so
+     * the chat/QA path can be routed through the LiteLLM gateway (#1731); the
+     * gateway accepts the native Anthropic message format with the VK.
+     */
+    private function messagesEndpoint(): string
+    {
+        $base = rtrim((string) config('anthropic.base_url', 'https://api.anthropic.com'), '/');
+
+        return $base.'/v1/messages';
     }
 
     /**
@@ -165,7 +178,7 @@ class AnthropicClient
         $apiKey = config('anthropic.api_key');
         $buffer = '';
 
-        $ch = curl_init('https://api.anthropic.com/v1/messages');
+        $ch = curl_init($this->messagesEndpoint());
         curl_setopt_array($ch, [
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
@@ -384,7 +397,7 @@ class AnthropicClient
         $maxAttempts = self::MAX_RETRIES + 1;
 
         for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
-            $ch = curl_init('https://api.anthropic.com/v1/messages');
+            $ch = curl_init($this->messagesEndpoint());
             curl_setopt_array($ch, [
                 CURLOPT_POST => true,
                 CURLOPT_HTTPHEADER => [

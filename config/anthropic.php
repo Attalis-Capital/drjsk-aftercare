@@ -14,15 +14,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Base URL
+    |--------------------------------------------------------------------------
+    |
+    | The Anthropic-compatible endpoint the chat/QA path calls. Defaults to the
+    | public Anthropic API, but on the DrJSK staging/pilot runtime the only model
+    | credential is the LiteLLM VK, which authenticates against the gateway (not
+    | api.anthropic.com direct). Set ANTHROPIC_BASE_URL to the gateway there. The
+    | gateway accepts native Anthropic /v1/messages with the VK (verified HTTP
+    | 200, x-api-key and Bearer), so only the base URL changes -- the request
+    | format is unchanged. (#1731 / #1723 staging chat fix.)
+    |
+    */
+    'base_url' => env('ANTHROPIC_BASE_URL', 'https://api.anthropic.com'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Model
     |--------------------------------------------------------------------------
     |
     | The default Claude model used for AI requests when no tier override.
-    | Production/demo: claude-opus-4-6
+    | Production/demo: claude-opus-4-8 (claude-opus-4-6 does not exist on the
+    | gateway).
     | Tests/development: claude-sonnet-4-5-20250929 (cost optimization)
     |
     */
-    'default_model' => env('ANTHROPIC_MODEL', 'claude-opus-4-6'),
+    'default_model' => env('ANTHROPIC_MODEL', 'claude-opus-4-8'),
 
     /*
     |--------------------------------------------------------------------------
