@@ -10,6 +10,36 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /*
+     * S11 (#1718): brand token layer aligned to drjsk.com.au (soft blue-grey,
+     * refined neutral) instead of hardcoded emerald. Introduces `brand-*` and
+     * `accent-*` scales so future surfaces reference tokens rather than
+     * hand-tweaked hex values. Existing emerald utilities are left in place to
+     * avoid a risky app-wide colour churn; new/blade surfaces (upload screen,
+     * visit-summary email) use the brand accent below.
+     */
+    --color-brand-50: #f4f7fa;
+    --color-brand-100: #e6edf3;
+    --color-brand-200: #cdd9e4;
+    --color-brand-300: #a9bccd;
+    --color-brand-400: #7d97ac;
+    --color-brand-500: #5b788f;
+    --color-brand-600: #3f5b74;
+    --color-brand-700: #33495c;
+    --color-brand-800: #2b3c4b;
+    --color-brand-900: #26333f;
+
+    --color-accent: #3f5b74;
+    --color-accent-strong: #33495c;
+}
+
+/* S11 (#1718): plain-CSS fallbacks so non-Tailwind (blade) surfaces can also
+   reference the brand accent as a variable. */
+:root {
+    --brand-accent: #3f5b74;
+    --brand-accent-strong: #33495c;
+    --brand-accent-soft: #f1f5f9;
 }
 
 /* AI document analysis — pulsing background */

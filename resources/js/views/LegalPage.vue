@@ -11,7 +11,7 @@
           <img src="/images/logo-full.png" alt="DrJSK AfterCare" class="h-8" />
         </div>
         <h1 class="text-3xl font-bold text-gray-900 mt-4">{{ title }}</h1>
-        <p class="text-sm text-gray-400 mt-1">Last updated: July 2, 2026</p>
+        <p class="text-sm text-gray-400 mt-1">Last updated: 2 July 2026</p>
       </div>
 
       <!-- Privacy Policy -->
@@ -34,14 +34,14 @@
           <h2 class="text-xl font-semibold text-gray-900">3. How We Use Your Data</h2>
           <ul class="text-gray-600 space-y-2 list-disc pl-5">
             <li>Generate visit summaries and plain-language explanations using AI.</li>
-            <li>Provide personalized health education materials.</li>
+            <li>Provide personalised health education materials.</li>
             <li>Enable secure communication between patients and healthcare providers.</li>
           </ul>
         </section>
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">4. AI Processing</h2>
-          <p class="text-gray-600 leading-relaxed">Your health data is processed by Claude (Anthropic) to generate summaries, answer questions, and create educational content. Per Anthropic's commercial API terms, data sent via the API is not used to train their models. All AI interactions are logged in our audit system for quality assurance.</p>
+          <p class="text-gray-600 leading-relaxed">Your health data is processed by large language models to generate summaries, answer questions, and create educational content. The primary model is Claude (Anthropic); wound-photo triage additionally uses a secondary model, Gemini (Google), for a second opinion. Both are accessed through a managed AI gateway (LiteLLM). Per the providers' commercial API terms, data sent via these APIs is not used to train their models. All AI interactions are logged in our audit system for quality assurance.</p>
         </section>
 
         <section>
@@ -107,7 +107,7 @@
 
         <section>
           <h2 class="text-xl font-semibold text-gray-900">7. Limitation of Liability</h2>
-          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. DrJSK AfterCare is a clinical pilot for the practice of Dr James Southwell-Keely, derived under the MIT License from the PostVisit.ai hackathon prototype (Built with Opus 4.6, February 2026).</p>
+          <p class="text-gray-600 leading-relaxed">DrJSK AfterCare is provided "as is" without warranties. We are not liable for any health outcomes resulting from reliance on AI-generated content. DrJSK AfterCare is a clinical pilot for the practice of Dr James Southwell-Keely.</p>
         </section>
       </div>
 
@@ -121,7 +121,7 @@
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Technology</h2>
           <ul class="text-gray-600 space-y-2 list-disc pl-5">
-            <li><strong>AI Model:</strong> Claude Opus 4.6 by Anthropic — used for transcription analysis, medical summarization, patient education, and interactive Q&A.</li>
+            <li><strong>AI Model:</strong> Claude Opus 4.6 by Anthropic — used for transcription analysis, medical summarisation, patient education, and interactive Q&A.</li>
             <li><strong>Speech-to-Text:</strong> OpenAI Whisper — for audio transcription of medical visits.</li>
             <li><strong>Backend:</strong> Laravel 12 (PHP 8.4) with PostgreSQL.</li>
             <li><strong>Frontend:</strong> Vue 3 with Tailwind CSS v4.</li>

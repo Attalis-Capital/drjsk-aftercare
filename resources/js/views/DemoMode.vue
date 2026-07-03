@@ -19,23 +19,31 @@
         See how DrJSK AfterCare works with a simulated plastic surgery recovery.
       </p>
 
+      <!-- S10 (#1718): surface demo-start failures inline (was console-only). -->
+      <div v-if="demoError" role="alert" class="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+        {{ demoError }}
+      </div>
+
       <div class="space-y-4">
         <button
-          class="w-full py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors"
+          class="w-full py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="loading"
           @click="startDemo('voice')"
         >
-          Try Voice Recording
+          {{ loading ? 'Starting...' : 'Try Voice Recording' }}
         </button>
         <button
-          class="w-full py-3 border-2 border-emerald-600 text-emerald-700 rounded-xl font-medium hover:bg-emerald-50 transition-colors"
+          class="w-full py-3 border-2 border-emerald-600 text-emerald-700 rounded-xl font-medium hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="loading"
           @click="startDemo('skip')"
         >
-          Skip to Visit Summary
+          {{ loading ? 'Starting...' : 'Skip to Visit Summary' }}
         </button>
       </div>
 
       <button
-        class="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+        class="text-sm text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        :disabled="loading"
         @click="switchToDoctor"
       >
         View Doctor Dashboard instead
@@ -68,6 +76,7 @@ const auth = useAuthStore();
 const step = ref('welcome');
 const demoVisitId = ref(null);
 const loading = ref(false);
+const demoError = ref(null);
 
 async function loginDemo(role) {
     const api = useApi();
@@ -82,6 +91,7 @@ async function loginDemo(role) {
 async function startDemo(mode) {
     loading.value = true;
     try {
+        demoError.value = null;
         const visit = await loginDemo('patient');
         if (mode === 'skip') {
             demoVisitId.value = visit?.id;
@@ -90,6 +100,7 @@ async function startDemo(mode) {
             router.push({ name: 'companion-scribe' });
         }
     } catch (err) {
+        demoError.value = err.response?.data?.error?.message || 'Could not start the demo. Please try again.';
         console.error('Demo start failed:', err);
     } finally {
         loading.value = false;
@@ -99,9 +110,11 @@ async function startDemo(mode) {
 async function switchToDoctor() {
     loading.value = true;
     try {
+        demoError.value = null;
         await loginDemo('doctor');
         router.push({ name: 'doctor-dashboard' });
     } catch (err) {
+        demoError.value = err.response?.data?.error?.message || 'Could not start the demo. Please try again.';
         console.error('Demo start failed:', err);
     } finally {
         loading.value = false;

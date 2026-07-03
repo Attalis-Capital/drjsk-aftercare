@@ -23,8 +23,9 @@
       <div class="flex items-center gap-1">
         <button
           v-if="embedded"
-          class="text-gray-400 hover:text-emerald-600 transition-colors p-1 rounded-lg hover:bg-emerald-50"
+          class="text-gray-400 hover:text-emerald-600 transition-colors min-w-11 min-h-11 flex items-center justify-center rounded-lg hover:bg-emerald-50"
           :title="maximized ? 'Restore chat size' : 'Maximize chat'"
+          :aria-label="maximized ? 'Restore chat size' : 'Maximize chat'"
           @click="$emit('toggle-maximize')"
         >
           <!-- Maximize icon -->
@@ -37,7 +38,9 @@
           </svg>
         </button>
         <button
-          class="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none p-1"
+          class="text-gray-400 hover:text-gray-600 transition-colors text-xl leading-none min-w-11 min-h-11 flex items-center justify-center"
+          title="Close chat"
+          aria-label="Close chat"
           @click="$emit('close')"
         >
           &times;
@@ -86,7 +89,24 @@
             {{ extractContext(msg.content) }}
           </span>
         </div>
+        <!-- B6 (#1718): urgent/critical escalations get a distinct, unmistakable
+             alert treatment (red banner + icon) so they can never read as small
+             talk. The message wording itself is unchanged (frozen copy). -->
         <div
+          v-if="msg.role === 'assistant' && msg.urgent"
+          role="alert"
+          class="rounded-2xl border-2 border-red-400 bg-red-50 px-4 py-3"
+        >
+          <div class="flex items-center gap-2 mb-1.5 text-red-700 font-bold text-sm">
+            <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            Urgent - act now
+          </div>
+          <div class="chat-prose prose prose-sm max-w-none text-red-900" v-html="renderUrgent(stripSources(msg.content))" />
+        </div>
+        <div
+          v-else
           :class="[
             'rounded-2xl px-4 py-3 text-sm',
             msg.role === 'user'
@@ -120,68 +140,47 @@
           class="mt-1.5"
           @source-click="handleSourceClick"
         />
-        <!-- Powered by badge + effort indicator + share actions for completed assistant messages -->
+        <!-- S4 (#1718): the model-credit badge, the effort-level badges (Quick
+             answer / Deep analysis / Clinical reasoning) and their thinking-budget
+             tooltips were removed from the patient chat - internal plumbing, not
+             patient-facing. Share actions remain. S8: action buttons meet a 44px
+             minimum tap target. -->
         <div
           v-if="msg.role === 'assistant' && !msg.streaming && msg.content"
           class="mt-1.5 flex items-center gap-2"
         >
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-medium border border-emerald-200/50">
-            <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-            </svg>
-            Powered by Opus 4.6
-          </span>
-          <!-- Effort level badge (skip medium — it's the default, don't clutter) -->
-          <span
-            v-if="msg.effort === 'low'"
-            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-medium bg-gray-100 text-gray-500 border border-gray-200/50"
-            title="Simple factual question — minimal thinking budget"
-          >
-            Quick answer
-          </span>
-          <span
-            v-else-if="msg.effort === 'high'"
-            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-medium bg-amber-50 text-amber-600 border border-amber-200/50"
-            title="Drug safety or interaction question — deep thinking budget"
-          >
-            Deep analysis
-          </span>
-          <span
-            v-else-if="msg.effort === 'max'"
-            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-medium bg-red-50 text-red-600 border border-red-200/50"
-            title="Safety-critical question — maximum thinking budget"
-          >
-            Clinical reasoning
-          </span>
           <div class="flex items-center gap-0.5 ml-auto">
             <!-- Copy -->
             <button
-              class="p-1 rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              class="min-w-11 min-h-11 flex items-center justify-center rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
               title="Copy response"
+              aria-label="Copy response"
               @click="copyResponse(msg)"
             >
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
               </svg>
             </button>
             <!-- Print -->
             <button
-              class="p-1 rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              class="min-w-11 min-h-11 flex items-center justify-center rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
               title="Print response"
+              aria-label="Print response"
               @click="printResponse(msg)"
             >
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
               </svg>
             </button>
             <!-- Share (native) -->
             <button
               v-if="canShare"
-              class="p-1 rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
+              class="min-w-11 min-h-11 flex items-center justify-center rounded text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
               title="Share response"
+              aria-label="Share response"
               @click="shareResponse(msg)"
             >
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
               </svg>
             </button>
@@ -220,12 +219,13 @@
       <div ref="contextMenuWrapper" class="relative">
         <button
           type="button"
-          class="w-9 h-9 rounded-full flex items-center justify-center transition-all shrink-0"
+          class="w-11 h-11 rounded-full flex items-center justify-center transition-all shrink-0"
           :class="showContextMenu
             ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-300'
             : 'bg-gray-100 text-gray-500 hover:bg-emerald-50 hover:text-emerald-600'"
           @click="showContextMenu = !showContextMenu"
           title="Select context sources"
+          aria-label="Select context sources"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -347,6 +347,20 @@ function renderMarkdown(text) {
     return safeMarkdown(text || '');
 }
 
+// B6 (#1718): render an urgent message as sanitised markdown with any practice
+// number turned into a tappable tel: link. The message wording is unchanged; we
+// only wrap the existing digits in an anchor.
+function renderUrgent(text) {
+    return linkifyPhones(safeMarkdown(text || ''));
+}
+
+function linkifyPhones(html) {
+    if (!html) return '';
+    return html
+        .replace(/\(02\) 9369 2800/g, '<a href="tel:+61293692800">$&</a>')
+        .replace(/(?<![\d>])000(?![\d<])/g, '<a href="tel:000">$&</a>');
+}
+
 function stripSources(text) {
     if (!text) return '';
     return text.replace(/\[sources\][\s\S]*?\[\/sources\]/g, '').trim();
@@ -376,7 +390,7 @@ function parseSources(text) {
             // Add visit date to practitioner badge for clarity
             if (key === 'practitioner' && visitStore.currentVisit?.started_at) {
                 const date = new Date(visitStore.currentVisit.started_at);
-                const formatted = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
                 return { label: `${label} · ${formatted}`, key };
             }
             return { label, key };
@@ -467,12 +481,12 @@ const lastUserMessage = computed(() => {
 const contextSuggestions = {
     // Visit-level context (default when entering a visit)
     'visit': [
-        'Summarize this visit for me in simple terms',
-        'What are the key takeaways from this visit?',
+        'Summarise this visit for me in simple terms',
+        'How should I care for my wound after this procedure?',
         'What should I do before my next appointment?',
-        'Explain my diagnosis and treatment plan',
+        'Explain my procedure and recovery plan',
         'What medications were prescribed and why?',
-        'What warning signs should I watch for?',
+        'What warning signs should I watch for after surgery?',
         'What questions should I ask at my follow-up?',
     ],
     'Chief Complaint': [
@@ -484,7 +498,7 @@ const contextSuggestions = {
         'How common is this complaint?',
     ],
     'History of Present Illness': [
-        'Can you summarize my history in simpler terms?',
+        'Can you summarise my history in simpler terms?',
         'How has my condition progressed?',
         'What factors might be causing my symptoms?',
         'What does this history mean for my treatment?',
@@ -574,10 +588,10 @@ const contextSuggestions = {
     ],
     'visit': [
         'What happened during my last visit?',
-        'What was discussed?',
-        'What was the conclusion?',
-        'Summarize my last visit',
-        'Give me the most important points',
+        'How should I care for my wound after this procedure?',
+        'What was the recovery plan?',
+        'Summarise my last visit',
+        'Give me the most important recovery points',
         'What follow-up actions were recommended?',
     ],
     'medication': [
@@ -643,7 +657,7 @@ const contextSuggestions = {
         'What are the key things in my medical history?',
         'Are there any concerning trends in my health data?',
         'What lab results should I pay attention to?',
-        'Summarize my current conditions and medications',
+        'Summarise my current conditions and medications',
         'What preventive screenings am I due for?',
         'How has my health changed over time?',
     ],
@@ -698,14 +712,16 @@ const contextSuggestions = {
     ],
 };
 
+// S9 (#1718): post-op plastic-surgery recovery prompts (this is a plastic
+// surgery after-care pilot), replacing the generic-medicine defaults.
 const defaultSuggestions = [
-    'What does my diagnosis mean in simple terms?',
-    'Explain my medication and side effects',
-    'What should I watch out for at home?',
-    'When should I call my doctor?',
-    'Can I drink alcohol with my medication?',
-    'What lifestyle changes should I make?',
-    'What questions should I ask at my next visit?',
+    'How should I care for my surgical wound at home?',
+    'What is normal swelling and bruising after my procedure?',
+    'When can I shower and get the wound wet?',
+    'What signs of infection should I watch for?',
+    'How should I manage my pain and take my medication?',
+    'When can I return to exercise and normal activity?',
+    'When should I call the practice or seek urgent help?',
 ];
 
 function pickSuggestions(pool, count = 3) {
@@ -898,17 +914,44 @@ async function copyResponse(msg) {
     }
 }
 
+// S2 (#1718): print via a hidden iframe instead of the banned popup-window
+// write flow (iOS blocks the popup). S4: the model-credit line is removed from
+// the print footer. The "DrJSK AfterCare AI" display name is kept byte-identical.
 function printResponse(msg) {
     const html = renderMarkdown(getPlainText(msg));
-    const win = window.open('', '_blank', 'width=700,height=900');
-    if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>DrJSK AfterCare AI Response</title>
+    const doc = `<!DOCTYPE html><html><head><title>DrJSK AfterCare AI Response</title>
 <style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:640px;margin:40px auto;padding:0 20px;color:#1f2937;line-height:1.6}
 h1,h2,h3{margin-top:1.5em}ul,ol{padding-left:1.5em}code{background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:0.9em}
 .footer{margin-top:3em;padding-top:1em;border-top:1px solid #e5e7eb;font-size:0.75em;color:#9ca3af;text-align:center}</style></head>
-<body>${html}<div class="footer">Generated by DrJSK AfterCare AI &middot; Powered by Claude Opus 4.6<br>This is an AI-generated summary and should not replace professional medical advice.</div></body></html>`);
-    win.document.close();
-    win.print();
+<body>${html}<div class="footer">Generated by DrJSK AfterCare AI<br>This is an AI-generated summary and should not replace professional medical advice.</div></body></html>`;
+
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('aria-hidden', 'true');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    // srcdoc avoids the banned popup-window write flow entirely.
+    iframe.srcdoc = doc;
+
+    const cleanup = () => {
+        setTimeout(() => {
+            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+        }, 1000);
+    };
+
+    iframe.onload = () => {
+        try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+        } finally {
+            cleanup();
+        }
+    };
+
+    document.body.appendChild(iframe);
 }
 
 async function shareResponse(msg) {
