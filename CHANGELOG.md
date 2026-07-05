@@ -2,6 +2,17 @@
 
 All notable changes to PostVisit.ai are documented here in reverse chronological order.
 
+## 2026-07-05
+
+### Verified
+- **Revision pickup — PR #8 review 4623648295 (mission #1725)** — audited the three
+  actionable items from shinny77's Railway-staging review against merged `main`
+  (`0e8ab67`). All resolved: PHP upload limits (`docker/uploads.ini`, 25M/26M),
+  DemoScenarioSeeder redeploy safety (existence guard in
+  `docker/railway-entrypoint.sh`), and no GD/image code path in the upload/triage
+  flow. No net-new code change required; evidence and count reconciliation in
+  `missions/1725/revision-response.md`.
+
 ## 2026-02-15
 
 ### Added
