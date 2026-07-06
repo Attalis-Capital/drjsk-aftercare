@@ -24,9 +24,10 @@ class EscalationDetector
         // Trigger 2: sudden severe swelling or pressure at the surgical site (haematoma)
         'severe swelling', 'sudden swelling', 'severe pressure', 'haematoma', 'hematoma',
         'swelling at the site', 'swelling at the surgical site', 'tight and swollen',
-        // Trigger 3: fever above 38.5C (patients phrase this many ways; also see fever check below)
-        'fever', 'high temperature', 'temperature of 39', 'temperature of 40',
-        '38.5', '38.6', '38.7', '38.8', '38.9', '39 degrees', '40 degrees',
+        // Trigger 3: fever above 38.5C is NOT a keyword — it is a numeric threshold parsed
+        // by detectFever() / FEVER_THRESHOLD_C. A bare 'fever' substring is deliberately
+        // excluded here because it over-triggers on negations ("no fever", "worried about
+        // fever but my temperature is normal"). See detectFever() for the parsing contract.
         // Trigger 4: uncontrolled bleeding
         'severe bleeding', 'uncontrolled bleeding', 'won\'t stop bleeding', 'will not stop bleeding',
         'bleeding heavily', 'soaking through',
@@ -47,6 +48,24 @@ class EscalationDetector
     // the #1701 wound-triage urgent path reuse THIS constant so the copy never
     // diverges. Do not inline this string elsewhere.
     public const CRITICAL_RECOMMENDED_ACTION = 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
+
+    /**
+     * Surgeon-confirmed URGENT fever threshold in degrees Celsius. Mirrors the
+     * "Fever above 38.5C" bullet in prompts/escalation-detector.md (authoritative).
+     * Comparison is inclusive (>=) per mission #1708 Task 1. Do not change this value
+     * without a corresponding surgeon-confirmed change to the prompt — the structural
+     * test in EscalationDetectorTest asserts the prompt and this constant agree.
+     */
+    public const FEVER_THRESHOLD_C = 38.5;
+
+    /**
+     * Plausible human body-temperature window (deg C) after normalisation. Numbers
+     * outside this window are not treated as temperatures, so "101 stitches" or a
+     * house number never reads as a fever.
+     */
+    private const PLAUSIBLE_C_MIN = 30.0;
+
+    private const PLAUSIBLE_C_MAX = 45.0;
 
     public function __construct(
         private AnthropicClient $client,
@@ -112,6 +131,20 @@ class EscalationDetector
             }
         }
 
+        // Trigger 3: fever above the surgeon-confirmed threshold. Numeric, not a
+        // keyword — parse a temperature and compare, so "no fever" never escalates.
+        $fever = $this->detectFever($lower);
+        if ($fever['is_fever']) {
+            return [
+                'is_urgent' => true,
+                'severity' => 'critical',
+                'reason' => "Message reports a fever of {$fever['temp_c']}C (>= ".self::FEVER_THRESHOLD_C.'C)',
+                'trigger_phrases' => [$fever['raw']],
+                'recommended_action' => self::CRITICAL_RECOMMENDED_ACTION,
+                'context_factors' => [],
+            ];
+        }
+
         return [
             'is_urgent' => false,
             'severity' => 'low',
@@ -120,6 +153,95 @@ class EscalationDetector
             'recommended_action' => 'No action needed',
             'context_factors' => [],
         ];
+    }
+
+    /**
+     * Detect a fever at or above FEVER_THRESHOLD_C from free-text patient input.
+     *
+     * Temperature-parsing contract (mission #1708 Task 1 / Council P1):
+     *  - A number only counts as a temperature when anchored to a temperature
+     *    indicator: an explicit unit (C, F, Celsius, Fahrenheit, degrees, or the °
+     *    symbol) OR a nearby temperature word (temperature / temp / fever). A bare
+     *    number elsewhere in the sentence ("39 years old", "no fever") is ignored —
+     *    this is why 'fever' is deliberately NOT a keyword.
+     *  - Unit assumption: an explicit F/Fahrenheit is converted from Fahrenheit;
+     *    every other case is read as Celsius when the value is a plausible Celsius
+     *    body temperature. An unqualified value that is only plausible as Fahrenheit
+     *    (e.g. "temperature of 101") is converted from Fahrenheit — a fail-safe that
+     *    leans toward detecting a fever rather than missing one.
+     *  - Range validation: only values normalising to PLAUSIBLE_C_MIN..MAX are
+     *    accepted, so non-temperature numbers cannot read as a fever.
+     *  - Comparison is inclusive: >= FEVER_THRESHOLD_C is a fever (38.4999 is not).
+     *
+     * @return array{is_fever: bool, temp_c: float|null, raw: string|null}
+     */
+    private function detectFever(string $lower): array
+    {
+        $candidates = [];
+
+        // Unit-anchored: "38.5c", "38.5 °c", "101.5 fahrenheit", "39 degrees".
+        if (preg_match_all('/(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)\b/u', $lower, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $hit) {
+                $candidates[] = [(float) $hit[1], $hit[2], trim($hit[0])];
+            }
+        }
+
+        // Temperature-word-anchored: "temperature of 39", "temp was 39.2", "fever of 40".
+        if (preg_match_all('/(?:temperature|temp|fever)\b[^0-9]{0,20}?(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)?\b/u', $lower, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $hit) {
+                $candidates[] = [(float) $hit[1], $hit[2] ?? '', trim($hit[0])];
+            }
+        }
+
+        $best = null;
+        $bestRaw = null;
+        foreach ($candidates as [$value, $unit, $raw]) {
+            $celsius = $this->normaliseToCelsius($value, $unit);
+            if ($celsius === null) {
+                continue;
+            }
+            if ($best === null || $celsius > $best) {
+                $best = $celsius;
+                $bestRaw = $raw;
+            }
+        }
+
+        if ($best === null) {
+            return ['is_fever' => false, 'temp_c' => null, 'raw' => null];
+        }
+
+        return [
+            'is_fever' => $best >= self::FEVER_THRESHOLD_C,
+            'temp_c' => round($best, 1),
+            'raw' => $bestRaw,
+        ];
+    }
+
+    /**
+     * Normalise a parsed (value, unit) pair to degrees Celsius, or null if the
+     * value cannot be a plausible human body temperature. See detectFever() for
+     * the full contract.
+     */
+    private function normaliseToCelsius(float $value, string $unit): ?float
+    {
+        $unit = strtolower(trim($unit));
+
+        if ($unit === 'f' || $unit === 'fahrenheit') {
+            $celsius = ($value - 32) * 5 / 9;
+        } elseif ($value >= self::PLAUSIBLE_C_MIN && $value <= self::PLAUSIBLE_C_MAX) {
+            $celsius = $value;
+        } elseif ($value >= 90.0 && $value <= 113.0) {
+            // Only plausible as Fahrenheit — convert (fail-safe toward detection).
+            $celsius = ($value - 32) * 5 / 9;
+        } else {
+            return null;
+        }
+
+        if ($celsius < self::PLAUSIBLE_C_MIN || $celsius > self::PLAUSIBLE_C_MAX) {
+            return null;
+        }
+
+        return $celsius;
     }
 
     private function aiEvaluate(string $message, ?Visit $visit): array
