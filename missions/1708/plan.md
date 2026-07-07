@@ -74,6 +74,47 @@ reviews).
    - Update the structural coverage test: the `fever` trigger is now validated via the
      `FEVER_THRESHOLD_C` constant + parser behaviour, not a keyword token (Council P2).
 
+## Amendment — PR #11 revision (shinny77, pr-check v2, 7 Jul 2026)
+
+The numeric-only parser was accepted as a correct Task-1 fix, but the review flagged a
+clinical-safety regression it introduced: requiring a *parseable number* meant an
+**affirmative unquantified** fever report ("I have a fever", "feeling feverish") no longer
+escalated. For a post-operative red flag that is the wrong direction — a missed
+infection/sepsis far outweighs a false alarm. The fix is **not** to re-add the bare
+`'fever'` substring (that reintroduces the "no fever" over-trigger); it is an affirmative,
+negation-aware qualitative trigger sitting *beside* the numeric path.
+
+Added in this revision (scope held to `EscalationDetector` + its test):
+
+1. **`detectQualitativeFever()`** — matches affirmative fever *constructions*
+   (`have/has/got/running a fever`, `feverish` + common misspellings, `burning up`,
+   `high temperature`, `feel hot`), never the bare `fever` noun. This is what keeps
+   "worried about a fever earlier but I feel fine now" (existing negative case) and
+   "denies fever" non-escalating while "I have a fever" escalates.
+2. **`isFeverNegatedBefore()`** — rejects any affirmative match preceded (within 30 chars)
+   by a negation cue (`no|not|never|without|denies|deny|denied|nil|negative|n't`), so
+   "I don't have a fever" does not escalate. Short cues are word-bounded so "now" ≠ "no".
+3. **Measurement governs** — the qualitative path fires only when *no* temperature was
+   parsed. If the patient gave a reading, the numeric `>= 38.5C` comparison decides; a
+   measured-but-normal value (e.g. "feverish but only 37.2C") does not escalate.
+4. **`FEVER_QUALITATIVE_RECOMMENDED_ACTION`** — escalates (practice + 000) *and* prompts
+   "Have you taken your temperature?"; never gated on the patient owning a thermometer.
+5. **Prompt** — one behavioural rule added; the authoritative 5-item URGENT list is
+   unchanged (still surgeon-confirmed), so the structural test's count holds.
+6. **Tests** — qualitative escalate / negation-guard / measurement-governs rows added to
+   `feverTemperatureCases`, plus a temperature-prompt assertion.
+
+**Deliberately deferred (review point #5, severe features).** The 000 hard-escalate path
+is *preserved*: breathing difficulty and severe headache remain keyword triggers and every
+critical escalation (including the new qualitative one) carries the 000 fallback. Adding
+*new* triggers for confusion / stiff neck / rash is held out of this "one concern only" PR —
+those need clinical wording sign-off to avoid over-triggering (e.g. "confused about my
+meds", a minor "rash"). Flagged for a follow-up. See the PR reply.
+
+**Note:** local environment has no PHP/Herd runtime, so tests were not run locally; the
+repo CI workflow (`.github/workflows/ci.yml`, PHP 8.4, `composer test`) is the verification
+gate on the PR.
+
 ## PAUSE (needs John + treating clinician)
 
 Post ONE question on the PR and stop: keep escalation **keyword-only** (all 5 triggers mirrored,

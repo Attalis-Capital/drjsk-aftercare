@@ -25,6 +25,20 @@ All notable changes to PostVisit.ai are documented here in reverse chronological
     (`demo/guidelines/**`, `public/data/apple-watch-alex.json`, `demo/transcript.txt`) were
     retained — grep evidence in the PR description.
 
+## 2026-07-07
+
+### Changed
+- **Escalation — affirmative qualitative-fever trigger (mission #1708, PR #11 revision)** —
+  an affirmative but unquantified fever report ("I have a fever", "feeling feverish",
+  "burning up", "high temperature") now escalates to critical even without a measured
+  temperature, prompting the patient to take their temperature. The trigger is
+  negation-aware: "no fever", "denies fever", "I don't have a fever", and
+  "temperature is fine" do not escalate, preserving the Task-1 numeric fix. When a
+  reading is given the numeric `>= 38.5C` comparison governs (a measured-but-normal value
+  does not escalate). Escalation is never gated on the patient owning a thermometer. Clinical
+  scope: `EscalationDetector` only; **do not merge** — awaits the treating clinician's
+  sign-off on escalation wording and the 38.5C threshold.
+
 ## 2026-07-05
 
 ### Verified
