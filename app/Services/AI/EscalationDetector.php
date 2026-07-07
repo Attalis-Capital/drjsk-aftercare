@@ -50,6 +50,16 @@ class EscalationDetector
     public const CRITICAL_RECOMMENDED_ACTION = 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
 
     /**
+     * Patient-facing action for an affirmative but UNMEASURED fever report (PR #11
+     * revision). A post-operative fever is a red flag, so an affirmative "I feel
+     * feverish" escalates even without a number — but we still prompt the patient to
+     * measure, so a reading can be compared against FEVER_THRESHOLD_C. The patient is
+     * never gated on owning a thermometer: escalation happens regardless. Includes the
+     * practice number and 000 so the critical-severity contract (and its tests) hold.
+     */
+    public const FEVER_QUALITATIVE_RECOMMENDED_ACTION = 'You have described feeling feverish. Have you taken your temperature? A reading of 38.5C or higher is a concern. Either way this could be urgent — please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
+
+    /**
      * Surgeon-confirmed URGENT fever threshold in degrees Celsius. Mirrors the
      * "Fever above 38.5C" bullet in prompts/escalation-detector.md (authoritative).
      * Comparison is inclusive (>=) per mission #1708 Task 1. Do not change this value
@@ -66,6 +76,41 @@ class EscalationDetector
     private const PLAUSIBLE_C_MIN = 30.0;
 
     private const PLAUSIBLE_C_MAX = 45.0;
+
+    /**
+     * Affirmative, negation-aware qualitative-fever patterns (PR #11 revision).
+     *
+     * These fire only when NO temperature was measured (see checkCriticalKeywords):
+     * an affirmative unquantified fever report is a post-operative red flag and must
+     * escalate, because a missed infection/sepsis far outweighs a false alarm.
+     *
+     * Deliberately NOT a bare 'fever' substring: that reintroduced the "no fever" /
+     * "worried about a fever earlier but I feel fine now" over-trigger the Task-1
+     * numeric refactor fixed. Instead we match affirmative CONSTRUCTIONS ("have a
+     * fever", "feeling feverish", "burning up", "high temperature") and then reject
+     * any match preceded by a negation cue (see isFeverNegatedBefore).
+     */
+    private const FEVER_AFFIRMATIVE_PATTERNS = [
+        // "I have / has / had / got / running a fever"
+        '/\b(?:have|has|had|having|got|getting|running|run)\s+(?:a\s+)?fever\b/',
+        // feverish + common misspellings
+        '/\b(?:feverish|feaver(?:ish)?|feavor(?:ish)?|fevor(?:ish)?)\b/',
+        // subjective heat
+        '/\bburning up\b/',
+        '/\b(?:feel|feeling|feels|felt|running)\s+(?:really\s+|very\s+|so\s+|quite\s+|a bit\s+)?(?:hot|feverish|burning up)\b/',
+        // elevated temperature phrased qualitatively (no number)
+        '/\bhigh\s+temp(?:erature)?\b/',
+        '/\btemp(?:erature)?\s+(?:is\s+|feels\s+|feeling\s+)?(?:high|elevated|up|through the roof)\b/',
+    ];
+
+    /**
+     * Negation cues that suppress an affirmative qualitative-fever match when they
+     * appear just before it ("I don't have a fever", "denies feeling feverish").
+     * Short cues use word boundaries so "now" never reads as "no".
+     */
+    private const FEVER_NEGATION_REGEX = '/\b(?:no|not|never|without|denies|deny|denied|nil|negative)\b|n\'t\b/';
+
+    private const FEVER_NEGATION_WINDOW = 30;
 
     public function __construct(
         private AnthropicClient $client,
@@ -143,6 +188,24 @@ class EscalationDetector
                 'recommended_action' => self::CRITICAL_RECOMMENDED_ACTION,
                 'context_factors' => [],
             ];
+        }
+
+        // Trigger 3 (qualitative): an affirmative, unquantified fever report escalates
+        // even without a number. Only when NO temperature was measured — if the patient
+        // gave a reading below threshold ($fever['temp_c'] not null), the measurement
+        // governs and we do not escalate on feeling-feverish language.
+        if ($fever['temp_c'] === null) {
+            $qualitative = $this->detectQualitativeFever($lower);
+            if ($qualitative['is_fever']) {
+                return [
+                    'is_urgent' => true,
+                    'severity' => 'critical',
+                    'reason' => "Message reports feeling feverish without a measured temperature: '{$qualitative['raw']}'",
+                    'trigger_phrases' => [$qualitative['raw']],
+                    'recommended_action' => self::FEVER_QUALITATIVE_RECOMMENDED_ACTION,
+                    'context_factors' => [],
+                ];
+            }
         }
 
         return [
@@ -242,6 +305,42 @@ class EscalationDetector
         }
 
         return $celsius;
+    }
+
+    /**
+     * Detect an affirmative, unquantified fever report (PR #11 revision).
+     *
+     * Matches affirmative fever CONSTRUCTIONS (not the bare word 'fever') and rejects
+     * any match immediately preceded by a negation cue, so "I have a fever" escalates
+     * while "no fever", "denies fever", and "worried about a fever earlier but I feel
+     * fine now" do not. Callers only invoke this when no temperature was measured.
+     *
+     * @return array{is_fever: bool, raw: string|null}
+     */
+    private function detectQualitativeFever(string $lower): array
+    {
+        foreach (self::FEVER_AFFIRMATIVE_PATTERNS as $pattern) {
+            if (preg_match($pattern, $lower, $matches, PREG_OFFSET_CAPTURE)) {
+                $offset = $matches[0][1];
+                if (! $this->isFeverNegatedBefore($lower, $offset)) {
+                    return ['is_fever' => true, 'raw' => trim($matches[0][0])];
+                }
+            }
+        }
+
+        return ['is_fever' => false, 'raw' => null];
+    }
+
+    /**
+     * True when a negation cue appears in the window immediately before $offset,
+     * suppressing an affirmative fever match ("I don't have a fever").
+     */
+    private function isFeverNegatedBefore(string $text, int $offset): bool
+    {
+        $start = max(0, $offset - self::FEVER_NEGATION_WINDOW);
+        $window = substr($text, $start, $offset - $start);
+
+        return (bool) preg_match(self::FEVER_NEGATION_REGEX, $window);
     }
 
     private function aiEvaluate(string $message, ?Visit $visit): array

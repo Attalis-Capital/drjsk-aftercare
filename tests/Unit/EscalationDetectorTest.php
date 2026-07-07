@@ -65,15 +65,22 @@ class EscalationDetectorTest extends TestCase
     }
 
     /**
-     * Temperature-parsing contract (Council P1). At least four input variants
+     * Temperature-parsing contract (Council P1) plus the affirmative, negation-aware
+     * qualitative-fever trigger (PR #11 revision). At least four numeric input variants
      * including a Fahrenheit case and the 38.4999 boundary, plus negation/age
      * false-positive guards. Fever is inclusive at FEVER_THRESHOLD_C (38.5C).
+     *
+     * The qualitative rows encode the revision's required direction: an affirmative
+     * unquantified fever report escalates (post-op red flag), while negated/absent
+     * fever and a measured-but-normal reading do not. Where a temperature IS given,
+     * the measurement governs — feeling-feverish language does not override it.
      *
      * @return array<string, array{0: string, 1: bool}>
      */
     public static function feverTemperatureCases(): array
     {
         return [
+            // --- Numeric path (retained, unchanged) ---
             // Celsius, explicit unit, at the inclusive threshold.
             'exactly 38.5C fires' => ['My temperature is 38.5°C.', true],
             'spelled-out Celsius fires' => ['The thermometer reads 38.5 Celsius.', true],
@@ -83,12 +90,27 @@ class EscalationDetectorTest extends TestCase
             // Boundary: just below threshold must NOT fire.
             'boundary 38.4999 does not fire' => ['My temperature is 38.4999.', false],
             'normal 36.8C does not fire' => ['My temperature is 36.8C.', false],
+            'normal 37.2C does not fire' => ['My temperature is 37.2C.', false],
             // Fahrenheit conversion (101.5F = 38.6C fires; 100F = 37.8C does not).
             'fahrenheit 101.5F fires' => ['My temperature is 101.5F.', true],
             'fahrenheit 100F does not fire' => ['My temperature is 100F.', false],
             // Negation / non-temperature-number false-positive guards.
             'no fever with normal reading does not fire' => ['I have no fever, my temperature is 36.5C.', false],
             'age is not read as a temperature' => ['I am 39 years old, recovering well, no fever.', false],
+
+            // --- Qualitative path (PR #11 revision) ---
+            // Affirmative, unquantified fever language MUST escalate (no number needed).
+            'affirmative "I have a fever" fires' => ['I have a fever and I feel awful.', true],
+            'feeling feverish fires' => ['I am feeling feverish and shivery today.', true],
+            'burning up fires' => ['I feel like I am burning up.', true],
+            'high temperature (no number) fires' => ['I think I have a high temperature.', true],
+            // Negated / absent fever MUST NOT escalate (protects the Task-1 fix).
+            'bare "no fever" does not fire' => ['I am recovering well and have no fever.', false],
+            'negated "don\'t have a fever" does not fire' => ['I don\'t have a fever, just checking in.', false],
+            'denies fever does not fire' => ['The nurse noted that I deny any fever.', false],
+            'temperature is fine does not fire' => ['My temperature is fine, just a quick question.', false],
+            // Measurement governs: feeling feverish but a normal reading given -> no escalation.
+            'feverish but measured 37.2C does not fire' => ['I feel feverish but my temperature is only 37.2C.', false],
         ];
     }
 
@@ -117,6 +139,19 @@ class EscalationDetectorTest extends TestCase
 
         $this->assertFalse($result['is_urgent']);
         $this->assertSame('low', $result['severity']);
+    }
+
+    public function test_qualitative_fever_without_number_prompts_for_temperature(): void
+    {
+        // Affirmative fever language with no measurement escalates AND asks the patient
+        // to take their temperature (PR #11 revision), without gating on a thermometer.
+        $result = $this->detector()->evaluate('I feel feverish but I have not checked yet.');
+
+        $this->assertTrue($result['is_urgent']);
+        $this->assertSame('critical', $result['severity']);
+        $this->assertStringContainsString('Have you taken your temperature?', $result['recommended_action']);
+        $this->assertStringContainsString('9369 2800', $result['recommended_action']);
+        $this->assertStringContainsString('000', $result['recommended_action']);
     }
 
     public function test_non_urgent_message_is_not_flagged(): void
