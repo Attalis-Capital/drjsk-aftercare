@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Services\Demo\DemoScenarioSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
@@ -61,5 +63,45 @@ class DemoResetTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonPath('data.message', 'Demo data has been reset successfully.');
+    }
+
+    public function test_reset_is_hard_blocked_in_production_even_when_flag_true(): void
+    {
+        Http::fake();
+        Cache::flush();
+        config([
+            'demo.reset_enabled' => true,
+            'services.slack.webhook_url' => 'https://hooks.slack.test/demo-reset',
+        ]);
+        $this->app['env'] = 'production';
+
+        // Production must never reach the destructive command, flag or no flag.
+        Artisan::shouldReceive('call')->never();
+
+        $response = $this->postJson('/api/v1/demo/reset');
+
+        $response->assertStatus(403)
+            ->assertJsonPath('error.message', 'Demo reset is disabled in production.');
+
+        Http::assertSent(fn ($request) => $request->url() === 'https://hooks.slack.test/demo-reset'
+            && str_contains($request['text'], 'Demo reset attempt'));
+    }
+
+    public function test_production_block_fires_slack_alert_when_flag_off(): void
+    {
+        Http::fake();
+        Cache::flush();
+        config([
+            'demo.reset_enabled' => false,
+            'services.slack.webhook_url' => 'https://hooks.slack.test/demo-reset',
+        ]);
+        $this->app['env'] = 'production';
+
+        $response = $this->postJson('/api/v1/demo/reset');
+
+        $response->assertStatus(403)
+            ->assertJsonPath('error.message', 'Demo reset is disabled in production.');
+
+        Http::assertSentCount(1);
     }
 }
