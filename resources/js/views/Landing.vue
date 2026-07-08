@@ -45,8 +45,7 @@
         DrJSK AfterCare helps you understand and act on your doctor's recommendations. It is not a substitute for professional medical judgment.
       </p>
       <p class="mt-3 text-[11px] text-gray-400">
-        Built by <a href="https://nedoszytko.com" target="_blank" rel="noopener" class="underline hover:text-gray-600 transition-colors">Michal Nedoszytko</a>
-        for the <span class="font-medium">Built with Opus 4.6</span> hackathon by <a href="https://www.anthropic.com" target="_blank" rel="noopener" class="underline hover:text-gray-600 transition-colors">Anthropic</a>
+        Built by <span class="font-medium">Attalis Capital</span>. Derived from <a href="https://nedoszytko.com" target="_blank" rel="noopener" class="underline hover:text-gray-600 transition-colors">PostVisit.ai by Michal Nedoszytko</a> (MIT), created for <a href="https://www.anthropic.com" target="_blank" rel="noopener" class="underline hover:text-gray-600 transition-colors">Anthropic</a>'s Built with Opus 4.6 hackathon.
       </p>
     </footer>
 

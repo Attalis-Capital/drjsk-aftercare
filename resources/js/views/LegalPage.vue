@@ -121,7 +121,7 @@
         <section>
           <h2 class="text-xl font-semibold text-gray-900">Technology</h2>
           <ul class="text-gray-600 space-y-2 list-disc pl-5">
-            <li><strong>AI Model:</strong> Claude Opus 4.6 by Anthropic — used for transcription analysis, medical summarisation, patient education, and interactive Q&A.</li>
+            <li><strong>AI Model:</strong> Claude by Anthropic (currently Opus 4.8, served via a secured gateway) — used for transcription analysis, medical summarisation, patient education, and interactive Q&A.</li>
             <li><strong>Speech-to-Text:</strong> OpenAI Whisper — for audio transcription of medical visits.</li>
             <li><strong>Backend:</strong> Laravel 12 (PHP 8.4) with PostgreSQL.</li>
             <li><strong>Frontend:</strong> Vue 3 with Tailwind CSS v4.</li>

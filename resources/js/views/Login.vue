@@ -87,7 +87,7 @@
     </div>
 
     <!-- Footer -->
-    <p class="mt-12 text-xs text-gray-300 relative z-10">Powered by Claude Opus 4.6</p>
+    <p class="mt-12 text-xs text-gray-300 relative z-10">Powered by Claude by Anthropic</p>
   </div>
 </template>
 
