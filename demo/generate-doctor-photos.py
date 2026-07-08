@@ -44,27 +44,8 @@ DOCTORS = {
                   "wearing white lab coat over light blue dress shirt, stethoscope around neck. "
                   "Cardiology specialist, professional and approachable.",
     },
-    "endocrinologist": {
-        "dir": "endocrinologist",
-        "prompt": "Anita, a 42-year-old Indian woman with long dark brown hair pulled back in a neat bun, "
-                  "warm brown skin, kind intelligent dark eyes, gentle professional smile, "
-                  "small gold earrings, wearing white lab coat over a burgundy silk blouse, "
-                  "stethoscope around neck. Endocrinology specialist.",
-    },
-    "gastroenterologist": {
-        "dir": "gastroenterologist",
-        "prompt": "Lisa, a 38-year-old East Asian Chinese-American woman with straight black shoulder-length hair, "
-                  "light skin, sharp confident expression with a warm smile, minimal makeup, "
-                  "wearing white lab coat over a navy blue blouse, stethoscope around neck. "
-                  "Gastroenterology specialist.",
-    },
-    "pulmonologist": {
-        "dir": "pulmonologist",
-        "prompt": "Chukwuemeka, a 50-year-old Nigerian man with dark brown skin, short graying black hair, "
-                  "well-groomed goatee with gray, warm deep brown eyes, distinguished authoritative presence, "
-                  "wearing white lab coat over a white dress shirt with dark tie, stethoscope around neck. "
-                  "Pulmonology specialist, experienced senior physician.",
-    },
+    # Per-specialty demo doctors removed (F4, #1850): no scenario references them
+    # (config/demo-scenarios.php practitioners => []). Only `default` is retained.
 }
 
 

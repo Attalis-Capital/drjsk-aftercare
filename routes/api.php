@@ -208,16 +208,18 @@ Route::prefix('v1')->group(function () {
     // Demo Engine (no auth — easy demo access, rate-limited)
     // -------------------------------------------------------
     Route::prefix('demo')->group(function () {
-        // Session creation — throttled to prevent token farming
+        // Session creation + reset — throttled to prevent token farming and to keep
+        // the destructive reset path rate-limited even when DEMO_RESET_ENABLED is on,
+        // so the env flag is not the sole barrier on an internet-reachable host.
         Route::middleware('throttle:demo')->group(function () {
             Route::post('start', [DemoController::class, 'start']);
             Route::post('start-scenario', [DemoScenarioController::class, 'startScenario']);
             Route::post('switch-to-doctor', [DemoScenarioController::class, 'switchToDoctor']);
             Route::post('simulate-alert', [DemoController::class, 'simulateAlert']);
+            // Reset — production hard-blocked in the controller; elsewhere gated on
+            // DEMO_RESET_ENABLED (default false).
+            Route::post('reset', [DemoController::class, 'reset']);
         });
-
-        // Reset — disabled in production (blocked)
-        Route::post('reset', [DemoController::class, 'reset']);
 
         // Read-only — no throttle needed
         Route::get('status', [DemoController::class, 'status']);

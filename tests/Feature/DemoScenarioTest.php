@@ -98,6 +98,19 @@ class DemoScenarioTest extends TestCase
             ->assertJsonPath('error.message', 'Unknown scenario: nonexistent');
     }
 
+    public function test_start_scenario_rejects_unsupported_role(): void
+    {
+        // Doctor access is a separate endpoint (switch-to-doctor); a stray role
+        // must be rejected rather than silently returning a patient session (F4).
+        $response = $this->postJson('/api/v1/demo/start-scenario', [
+            'scenario' => 'diep-flap',
+            'role' => 'doctor',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('role');
+    }
+
     public function test_same_scenario_reuses_existing_user(): void
     {
         $r1 = $this->postJson('/api/v1/demo/start-scenario', ['scenario' => 'diep-flap']);

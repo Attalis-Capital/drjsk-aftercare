@@ -87,8 +87,12 @@ class DemoScenarioController extends Controller
      */
     public function startScenario(Request $request): JsonResponse
     {
+        // 'role' is not honoured here — doctor sessions are created via the
+        // dedicated switch-to-doctor endpoint. Reject an unsupported role rather
+        // than silently returning a patient session (F4, #1850).
         $request->validate([
             'scenario' => 'required|string',
+            'role' => 'sometimes|in:patient',
         ]);
 
         $scenarioKey = $request->input('scenario');

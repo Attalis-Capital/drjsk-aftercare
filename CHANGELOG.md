@@ -2,6 +2,29 @@
 
 All notable changes to PostVisit.ai are documented here in reverse chronological order.
 
+## 2026-07-08
+
+### Fixed
+- **QA pre-James sweep (mission #1850)** — closed the four findings from the 8 Jul staging QA:
+  - **F1 — /demo/reset hardened.** Imported the `Artisan` facade (the call previously
+    resolved to a non-existent class and 500'd); gated execution behind
+    `DEMO_RESET_ENABLED` (default false, via `config('demo.reset_enabled')`) with the
+    production hard-block + Slack alert retained regardless of the flag; moved the route
+    inside the `throttle:demo` group so the flag is not the sole barrier on an
+    internet-reachable host. Feature tests cover the absent/false-flag 403, the enabled
+    success path, and the flag-independent production block + Slack alert.
+  - **F2/F3 — attribution and model strings.** Landing and PatientLayout footers reworded to
+    an Attalis-built / PostVisit.ai-derived credit (MIT attribution retained); Login shows
+    "Powered by Claude by Anthropic"; the Legal page AI-model line reads "Claude by
+    Anthropic (currently Opus 4.8, served via a secured gateway)". The historical
+    "Built with Opus 4.6, February 2026" derivation sentence is unchanged.
+  - **F4 — cosmetics.** `start-scenario` rejects an unsupported `role` param (422) instead
+    of silently returning a patient session; removed genuinely-orphaned demo assets (four
+    specialist doctor photo dirs and a byte-identical `demo/apple-watch-alex.json`, plus the
+    matching generator entries). Assets still referenced by live code/tests
+    (`demo/guidelines/**`, `public/data/apple-watch-alex.json`, `demo/transcript.txt`) were
+    retained — grep evidence in the PR description.
+
 ## 2026-07-05
 
 ### Verified
