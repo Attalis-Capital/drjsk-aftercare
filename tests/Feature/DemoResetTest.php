@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Services\Demo\DemoScenarioSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 /**
- * Guards the unauthenticated, destructive /demo/reset endpoint (F1, #1850).
+ * Guards the unauthenticated, destructive /api/v1/demo/reset endpoint (F1, #1850).
  *
  * reset() runs migrate:fresh (full DB wipe). The route is unauthenticated and
  * sits outside throttle:demo, so it must execute ONLY when explicitly enabled
@@ -23,7 +24,7 @@ class DemoResetTest extends TestCase
         // No explicit config — default is false.
         Artisan::shouldReceive('call')->never();
 
-        $response = $this->postJson('/api/demo/reset');
+        $response = $this->postJson('/api/v1/demo/reset');
 
         $response->assertStatus(403)
             ->assertJsonPath('error.message', 'Demo reset is not enabled in this environment.');
@@ -34,7 +35,7 @@ class DemoResetTest extends TestCase
         config()->set('demo.reset_enabled', false);
         Artisan::shouldReceive('call')->never();
 
-        $response = $this->postJson('/api/demo/reset');
+        $response = $this->postJson('/api/v1/demo/reset');
 
         $response->assertStatus(403)
             ->assertJsonPath('error.message', 'Demo reset is not enabled in this environment.');
@@ -45,10 +46,15 @@ class DemoResetTest extends TestCase
         config()->set('demo.reset_enabled', true);
 
         // Assert the destructive command is invoked exactly once when enabled,
-        // without actually running migrate:fresh against the test DB.
+        // without actually running migrate:fresh against the test DB. The seeder
+        // is mocked so the test isolates the guard + Artisan dispatch (the
+        // security-relevant behaviour) from demo-seed data specifics.
         Artisan::shouldReceive('call')->once()->with('migrate:fresh');
+        $this->mock(DemoScenarioSeeder::class, function ($m) {
+            $m->shouldReceive('seed')->andReturn(null);
+        });
 
-        $response = $this->postJson('/api/demo/reset');
+        $response = $this->postJson('/api/v1/demo/reset');
 
         $response->assertStatus(200)
             ->assertJsonPath('data.message', 'Demo data has been reset successfully.');
