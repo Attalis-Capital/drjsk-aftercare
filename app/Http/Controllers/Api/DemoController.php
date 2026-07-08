@@ -9,6 +9,7 @@ use App\Services\Demo\DemoScenarioSeeder;
 use App\Services\SlackAlertService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 class DemoController extends Controller
@@ -103,12 +104,22 @@ class DemoController extends Controller
 
     public function reset(Request $request): JsonResponse
     {
-        // Block in production — this wipes the entire database
+        // Block in production — this wipes the entire database. This hard-block
+        // applies regardless of the DEMO_RESET_ENABLED flag below.
         if (app()->environment('production')) {
             SlackAlertService::resetAttempt($request->ip());
 
             return response()->json([
                 'error' => ['message' => 'Demo reset is disabled in production.'],
+            ], 403);
+        }
+
+        // The route is unauthenticated and destructive (migrate:fresh wipes the
+        // DB), so it executes only when explicitly enabled for this environment.
+        // Config-wired (not env() at runtime) so it respects config:cache.
+        if (! config('demo.reset_enabled')) {
+            return response()->json([
+                'error' => ['message' => 'Demo reset is not enabled in this environment.'],
             ], 403);
         }
 
