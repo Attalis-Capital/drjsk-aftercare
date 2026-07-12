@@ -111,6 +111,17 @@ class EscalationDetectorTest extends TestCase
             'temperature is fine does not fire' => ['My temperature is fine, just a quick question.', false],
             // Measurement governs: feeling feverish but a normal reading given -> no escalation.
             'feverish but measured 37.2C does not fire' => ['I feel feverish but my temperature is only 37.2C.', false],
+
+            // --- Clause-boundary negation guard (shinny77 review comment, blocking defect) ---
+            // "no" belongs to "headache" clause; comma + "but" are clause boundaries — fever escalates.
+            'cross-clause negation does not suppress: no headache but fever' => ['no headache, but I have a fever', true],
+            // "not sure why" + "but" is a clause boundary — affirmative fever escalates.
+            'cross-clause negation does not suppress: not sure why but fever' => ['not sure why but I have a fever', true],
+
+            // --- European decimal comma (shinny77 review comment, medium fail-unsafe) ---
+            // "38,5" must be normalised to 38.5C and fire at the inclusive threshold.
+            'comma-decimal 38,5 fires' => ['My temperature is 38,5 degrees.', true],
+            'comma-decimal 37,2 does not fire' => ['My temperature is 37,2.', false],
         ];
     }
 

@@ -240,6 +240,11 @@ class EscalationDetector
      */
     private function detectFever(string $lower): array
     {
+        // Normalise European decimal commas so "38,5" is treated as 38.5.
+        // Only applied when two digits precede the comma and 1-2 digits follow,
+        // to avoid matching thousands-separators like "1,500".
+        $lower = preg_replace('/\b(\d{2}),(\d{1,2})\b/', '$1.$2', $lower);
+
         $candidates = [];
 
         // Unit-anchored: "38.5c", "38.5 °c", "101.5 fahrenheit", "39 degrees".
@@ -332,15 +337,31 @@ class EscalationDetector
     }
 
     /**
-     * True when a negation cue appears in the window immediately before $offset,
-     * suppressing an affirmative fever match ("I don't have a fever").
+     * True when a negation cue appears in the window immediately before $offset
+     * AND in the same clause as the fever phrase — suppressing matches such as
+     * "I don't have a fever" or "denies feeling feverish".
+     *
+     * Clause-aware: if a clause-boundary token (comma, semicolon, period, "but",
+     * "however", "yet", "although", "though") appears between the negation cue and
+     * the fever phrase, the negation belongs to a prior clause and must NOT suppress
+     * the fever match. Example: "no headache, but I have a fever" — the "no" applies
+     * to headache, not to the fever phrase; the comma clause-boundary after "no"
+     * makes this correctly NOT suppressed.
      */
     private function isFeverNegatedBefore(string $text, int $offset): bool
     {
         $start = max(0, $offset - self::FEVER_NEGATION_WINDOW);
         $window = substr($text, $start, $offset - $start);
 
-        return (bool) preg_match(self::FEVER_NEGATION_REGEX, $window);
+        if (! preg_match(self::FEVER_NEGATION_REGEX, $window, $negMatch, PREG_OFFSET_CAPTURE)) {
+            return false;
+        }
+
+        // Check for a clause-separating token between the negation cue and the fever
+        // phrase. If one exists, the negation is in a different clause.
+        $afterNegation = substr($window, $negMatch[0][1] + strlen($negMatch[0][0]));
+
+        return ! (bool) preg_match('/[,;.!?]|\b(?:but|however|yet|although|though)\b/', $afterNegation);
     }
 
     private function aiEvaluate(string $message, ?Visit $visit): array
