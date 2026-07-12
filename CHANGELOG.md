@@ -2,6 +2,22 @@
 
 All notable changes to PostVisit.ai are documented here in reverse chronological order.
 
+## 2026-07-13
+
+### Fixed
+- **Escalation — clause-aware negation + comma-decimal temp (mission #1708, PR #11 revision 2)** —
+  two clinical false-negative defects flagged in shinny77's review comments (both fail-unsafe):
+  - `isFeverNegatedBefore()` had a blind 30-char negation window. *"no headache, but I have a fever"*
+    caused the `no` from the headache clause to suppress the affirmative fever match → missed escalation.
+    Fix: after a negation cue is found, a clause-boundary token (comma, semicolon, period, or
+    `but`/`however`/`yet`/`although`/`though`) between it and the fever phrase marks them as separate
+    clauses — the negation no longer suppresses. In-clause negations (*"I don't have a fever"*,
+    *"denies feeling feverish"*) are unaffected.
+  - European decimal-comma temperatures (*"38,5 degrees"*) were parsed as 38 °C (below threshold) →
+    genuine 38.5 °C fever silently missed. Normalise `\b(\d{2}),(\d{1,2})\b` → dot before regexes.
+  Regression tests added for both cases. **Do not merge** — clinical-safety change, awaits James's
+  sign-off on escalation wording and the 38.5 °C threshold.
+
 ## 2026-07-08
 
 ### Fixed
