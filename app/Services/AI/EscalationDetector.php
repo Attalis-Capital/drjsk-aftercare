@@ -235,6 +235,11 @@ class EscalationDetector
      *  - Range validation: only values normalising to PLAUSIBLE_C_MIN..MAX are
      *    accepted, so non-temperature numbers cannot read as a fever.
      *  - Comparison is inclusive: >= FEVER_THRESHOLD_C is a fever (38.4999 is not).
+     *  - Negation-aware: a candidate number is discarded when a negation cue
+     *    (see FEVER_NEGATION_REGEX) appears in the same clause immediately before
+     *    the NUMBER itself — not just before the temperature word — so "my
+     *    temperature is not 39" and "I don't have a temperature of 39" are both
+     *    correctly discarded. See isFeverNegatedBefore().
      *
      * @return array{is_fever: bool, temp_c: float|null, raw: string|null}
      */
@@ -242,30 +247,37 @@ class EscalationDetector
     {
         // Normalise European decimal commas so "38,5" is treated as 38.5.
         // Only applied when two digits precede the comma and 1-2 digits follow,
-        // to avoid matching thousands-separators like "1,500".
+        // to avoid matching thousands-separators like "1,500". Same length as the
+        // original (comma -> period), so capture offsets below stay valid.
         $lower = preg_replace('/\b(\d{2}),(\d{1,2})\b/', '$1.$2', $lower);
 
         $candidates = [];
 
         // Unit-anchored: "38.5c", "38.5 °c", "101.5 fahrenheit", "39 degrees".
-        if (preg_match_all('/(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)\b/u', $lower, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('/(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)\b/u', $lower, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             foreach ($matches as $hit) {
-                $candidates[] = [(float) $hit[1], $hit[2], trim($hit[0])];
+                $candidates[] = [(float) $hit[1][0], $hit[2][0], trim($hit[0][0]), $hit[1][1]];
             }
         }
 
         // Temperature-word-anchored: "temperature of 39", "temp was 39.2", "fever of 40".
-        if (preg_match_all('/(?:temperature|temp|fever)\b[^0-9]{0,20}?(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)?\b/u', $lower, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all('/(?:temperature|temp|fever)\b[^0-9]{0,20}?(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)?\b/u', $lower, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
             foreach ($matches as $hit) {
-                $candidates[] = [(float) $hit[1], $hit[2] ?? '', trim($hit[0])];
+                $candidates[] = [(float) $hit[1][0], $hit[2][0] ?? '', trim($hit[0][0]), $hit[1][1]];
             }
         }
 
         $best = null;
         $bestRaw = null;
-        foreach ($candidates as [$value, $unit, $raw]) {
+        foreach ($candidates as [$value, $unit, $raw, $numberOffset]) {
             $celsius = $this->normaliseToCelsius($value, $unit);
             if ($celsius === null) {
+                continue;
+            }
+            // Discard a candidate negated in its own clause ("not 39", "don't have
+            // a temperature of 39") so it can never contribute to $best. A later,
+            // non-negated candidate in the same message is still free to fire.
+            if ($this->isFeverNegatedBefore($lower, $numberOffset)) {
                 continue;
             }
             if ($best === null || $celsius > $best) {
@@ -337,31 +349,33 @@ class EscalationDetector
     }
 
     /**
-     * True when a negation cue appears in the window immediately before $offset
-     * AND in the same clause as the fever phrase — suppressing matches such as
-     * "I don't have a fever" or "denies feeling feverish".
+     * True when a negation cue appears anywhere in the CURRENT CLAUSE immediately
+     * before $offset — suppressing matches such as "I don't have a fever", "denies
+     * feeling feverish", or (numeric path) "my temperature is not 39".
      *
-     * Clause-aware: if a clause-boundary token (comma, semicolon, period, "but",
-     * "however", "yet", "although", "though") appears between the negation cue and
-     * the fever phrase, the negation belongs to a prior clause and must NOT suppress
-     * the fever match. Example: "no headache, but I have a fever" — the "no" applies
-     * to headache, not to the fever phrase; the comma clause-boundary after "no"
-     * makes this correctly NOT suppressed.
+     * Clause-aware: the window before $offset is first trimmed back to the text
+     * after the LAST clause-boundary token (comma, semicolon, period, "but",
+     * "however", "yet", "although", "though"), then the whole of that trimmed
+     * clause is searched for a negation cue. Trimming to the last boundary (rather
+     * than stopping at the first negation cue found) matters when a clause has more
+     * than one candidate negation word: "no, my temperature is not 39" — "no"
+     * precedes the comma boundary and must NOT suppress, but "not" is in the same
+     * clause as the number and MUST suppress. Example that stays unsuppressed:
+     * "no headache, but I have a fever" — the "no" applies to headache; the comma +
+     * "but" boundary means the fever phrase's clause has no negation cue.
      */
     private function isFeverNegatedBefore(string $text, int $offset): bool
     {
         $start = max(0, $offset - self::FEVER_NEGATION_WINDOW);
         $window = substr($text, $start, $offset - $start);
 
-        if (! preg_match(self::FEVER_NEGATION_REGEX, $window, $negMatch, PREG_OFFSET_CAPTURE)) {
-            return false;
+        $clause = $window;
+        if (preg_match_all('/[,;.!?]|\b(?:but|however|yet|although|though)\b/', $window, $boundaries, PREG_OFFSET_CAPTURE)) {
+            $lastBoundary = end($boundaries[0]);
+            $clause = substr($window, $lastBoundary[1] + strlen($lastBoundary[0]));
         }
 
-        // Check for a clause-separating token between the negation cue and the fever
-        // phrase. If one exists, the negation is in a different clause.
-        $afterNegation = substr($window, $negMatch[0][1] + strlen($negMatch[0][0]));
-
-        return ! (bool) preg_match('/[,;.!?]|\b(?:but|however|yet|although|though)\b/', $afterNegation);
+        return (bool) preg_match(self::FEVER_NEGATION_REGEX, $clause);
     }
 
     private function aiEvaluate(string $message, ?Visit $visit): array

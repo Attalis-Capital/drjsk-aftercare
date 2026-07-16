@@ -122,6 +122,15 @@ class EscalationDetectorTest extends TestCase
             // "38,5" must be normalised to 38.5C and fire at the inclusive threshold.
             'comma-decimal 38,5 fires' => ['My temperature is 38,5 degrees.', true],
             'comma-decimal 37,2 does not fire' => ['My temperature is 37,2.', false],
+
+            // --- Negated NUMERIC temperature (PR #11 revision 2 gap) ---
+            // detectFever() must itself be negation-aware, not just the qualitative
+            // path: a negated numeric reading above threshold must NOT escalate.
+            'negated numeric "don\'t have a temperature of 39" does not fire' => ["I don't have a temperature of 39, just tired.", false],
+            'negated numeric "temperature is not 39" does not fire' => ['No, my temperature is not 39, I already checked.', false],
+            // Genuine positive numeric reports must still fire (no overcorrection).
+            'genuine numeric "temperature of 39, worried" fires' => ['My temperature of 39, worried.', true],
+            'genuine numeric "39 degrees, getting worse" fires' => ['39 degrees, getting worse.', true],
         ];
     }
 
