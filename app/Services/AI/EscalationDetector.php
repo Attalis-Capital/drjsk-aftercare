@@ -24,9 +24,10 @@ class EscalationDetector
         // Trigger 2: sudden severe swelling or pressure at the surgical site (haematoma)
         'severe swelling', 'sudden swelling', 'severe pressure', 'haematoma', 'hematoma',
         'swelling at the site', 'swelling at the surgical site', 'tight and swollen',
-        // Trigger 3: fever above 38.5C (patients phrase this many ways; also see fever check below)
-        'fever', 'high temperature', 'temperature of 39', 'temperature of 40',
-        '38.5', '38.6', '38.7', '38.8', '38.9', '39 degrees', '40 degrees',
+        // Trigger 3: fever above 38.5C is NOT a keyword — it is a numeric threshold parsed
+        // by detectFever() / FEVER_THRESHOLD_C. A bare 'fever' substring is deliberately
+        // excluded here because it over-triggers on negations ("no fever", "worried about
+        // fever but my temperature is normal"). See detectFever() for the parsing contract.
         // Trigger 4: uncontrolled bleeding
         'severe bleeding', 'uncontrolled bleeding', 'won\'t stop bleeding', 'will not stop bleeding',
         'bleeding heavily', 'soaking through',
@@ -47,6 +48,69 @@ class EscalationDetector
     // the #1701 wound-triage urgent path reuse THIS constant so the copy never
     // diverges. Do not inline this string elsewhere.
     public const CRITICAL_RECOMMENDED_ACTION = 'This sounds like it could be urgent. Please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
+
+    /**
+     * Patient-facing action for an affirmative but UNMEASURED fever report (PR #11
+     * revision). A post-operative fever is a red flag, so an affirmative "I feel
+     * feverish" escalates even without a number — but we still prompt the patient to
+     * measure, so a reading can be compared against FEVER_THRESHOLD_C. The patient is
+     * never gated on owning a thermometer: escalation happens regardless. Includes the
+     * practice number and 000 so the critical-severity contract (and its tests) hold.
+     */
+    public const FEVER_QUALITATIVE_RECOMMENDED_ACTION = 'You have described feeling feverish. Have you taken your temperature? A reading of 38.5C or higher is a concern. Either way this could be urgent — please call the practice on (02) 9369 2800 now; in an emergency call 000. Do not wait.';
+
+    /**
+     * Surgeon-confirmed URGENT fever threshold in degrees Celsius. Mirrors the
+     * "Fever above 38.5C" bullet in prompts/escalation-detector.md (authoritative).
+     * Comparison is inclusive (>=) per mission #1708 Task 1. Do not change this value
+     * without a corresponding surgeon-confirmed change to the prompt — the structural
+     * test in EscalationDetectorTest asserts the prompt and this constant agree.
+     */
+    public const FEVER_THRESHOLD_C = 38.5;
+
+    /**
+     * Plausible human body-temperature window (deg C) after normalisation. Numbers
+     * outside this window are not treated as temperatures, so "101 stitches" or a
+     * house number never reads as a fever.
+     */
+    private const PLAUSIBLE_C_MIN = 30.0;
+
+    private const PLAUSIBLE_C_MAX = 45.0;
+
+    /**
+     * Affirmative, negation-aware qualitative-fever patterns (PR #11 revision).
+     *
+     * These fire only when NO temperature was measured (see checkCriticalKeywords):
+     * an affirmative unquantified fever report is a post-operative red flag and must
+     * escalate, because a missed infection/sepsis far outweighs a false alarm.
+     *
+     * Deliberately NOT a bare 'fever' substring: that reintroduced the "no fever" /
+     * "worried about a fever earlier but I feel fine now" over-trigger the Task-1
+     * numeric refactor fixed. Instead we match affirmative CONSTRUCTIONS ("have a
+     * fever", "feeling feverish", "burning up", "high temperature") and then reject
+     * any match preceded by a negation cue (see isFeverNegatedBefore).
+     */
+    private const FEVER_AFFIRMATIVE_PATTERNS = [
+        // "I have / has / had / got / running a fever"
+        '/\b(?:have|has|had|having|got|getting|running|run)\s+(?:a\s+)?fever\b/',
+        // feverish + common misspellings
+        '/\b(?:feverish|feaver(?:ish)?|feavor(?:ish)?|fevor(?:ish)?)\b/',
+        // subjective heat
+        '/\bburning up\b/',
+        '/\b(?:feel|feeling|feels|felt|running)\s+(?:really\s+|very\s+|so\s+|quite\s+|a bit\s+)?(?:hot|feverish|burning up)\b/',
+        // elevated temperature phrased qualitatively (no number)
+        '/\bhigh\s+temp(?:erature)?\b/',
+        '/\btemp(?:erature)?\s+(?:is\s+|feels\s+|feeling\s+)?(?:high|elevated|up|through the roof)\b/',
+    ];
+
+    /**
+     * Negation cues that suppress an affirmative qualitative-fever match when they
+     * appear just before it ("I don't have a fever", "denies feeling feverish").
+     * Short cues use word boundaries so "now" never reads as "no".
+     */
+    private const FEVER_NEGATION_REGEX = '/\b(?:no|not|never|without|denies|deny|denied|nil|negative)\b|n\'t\b/';
+
+    private const FEVER_NEGATION_WINDOW = 30;
 
     public function __construct(
         private AnthropicClient $client,
@@ -112,6 +176,38 @@ class EscalationDetector
             }
         }
 
+        // Trigger 3: fever above the surgeon-confirmed threshold. Numeric, not a
+        // keyword — parse a temperature and compare, so "no fever" never escalates.
+        $fever = $this->detectFever($lower);
+        if ($fever['is_fever']) {
+            return [
+                'is_urgent' => true,
+                'severity' => 'critical',
+                'reason' => "Message reports a fever of {$fever['temp_c']}C (>= ".self::FEVER_THRESHOLD_C.'C)',
+                'trigger_phrases' => [$fever['raw']],
+                'recommended_action' => self::CRITICAL_RECOMMENDED_ACTION,
+                'context_factors' => [],
+            ];
+        }
+
+        // Trigger 3 (qualitative): an affirmative, unquantified fever report escalates
+        // even without a number. Only when NO temperature was measured — if the patient
+        // gave a reading below threshold ($fever['temp_c'] not null), the measurement
+        // governs and we do not escalate on feeling-feverish language.
+        if ($fever['temp_c'] === null) {
+            $qualitative = $this->detectQualitativeFever($lower);
+            if ($qualitative['is_fever']) {
+                return [
+                    'is_urgent' => true,
+                    'severity' => 'critical',
+                    'reason' => "Message reports feeling feverish without a measured temperature: '{$qualitative['raw']}'",
+                    'trigger_phrases' => [$qualitative['raw']],
+                    'recommended_action' => self::FEVER_QUALITATIVE_RECOMMENDED_ACTION,
+                    'context_factors' => [],
+                ];
+            }
+        }
+
         return [
             'is_urgent' => false,
             'severity' => 'low',
@@ -120,6 +216,166 @@ class EscalationDetector
             'recommended_action' => 'No action needed',
             'context_factors' => [],
         ];
+    }
+
+    /**
+     * Detect a fever at or above FEVER_THRESHOLD_C from free-text patient input.
+     *
+     * Temperature-parsing contract (mission #1708 Task 1 / Council P1):
+     *  - A number only counts as a temperature when anchored to a temperature
+     *    indicator: an explicit unit (C, F, Celsius, Fahrenheit, degrees, or the °
+     *    symbol) OR a nearby temperature word (temperature / temp / fever). A bare
+     *    number elsewhere in the sentence ("39 years old", "no fever") is ignored —
+     *    this is why 'fever' is deliberately NOT a keyword.
+     *  - Unit assumption: an explicit F/Fahrenheit is converted from Fahrenheit;
+     *    every other case is read as Celsius when the value is a plausible Celsius
+     *    body temperature. An unqualified value that is only plausible as Fahrenheit
+     *    (e.g. "temperature of 101") is converted from Fahrenheit — a fail-safe that
+     *    leans toward detecting a fever rather than missing one.
+     *  - Range validation: only values normalising to PLAUSIBLE_C_MIN..MAX are
+     *    accepted, so non-temperature numbers cannot read as a fever.
+     *  - Comparison is inclusive: >= FEVER_THRESHOLD_C is a fever (38.4999 is not).
+     *  - Negation-aware: a candidate number is discarded when a negation cue
+     *    (see FEVER_NEGATION_REGEX) appears in the same clause immediately before
+     *    the NUMBER itself — not just before the temperature word — so "my
+     *    temperature is not 39" and "I don't have a temperature of 39" are both
+     *    correctly discarded. See isFeverNegatedBefore().
+     *
+     * @return array{is_fever: bool, temp_c: float|null, raw: string|null}
+     */
+    private function detectFever(string $lower): array
+    {
+        // Normalise European decimal commas so "38,5" is treated as 38.5.
+        // Only applied when two digits precede the comma and 1-2 digits follow,
+        // to avoid matching thousands-separators like "1,500". Same length as the
+        // original (comma -> period), so capture offsets below stay valid.
+        $lower = preg_replace('/\b(\d{2}),(\d{1,2})\b/', '$1.$2', $lower);
+
+        $candidates = [];
+
+        // Unit-anchored: "38.5c", "38.5 °c", "101.5 fahrenheit", "39 degrees".
+        if (preg_match_all('/(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)\b/u', $lower, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+            foreach ($matches as $hit) {
+                $candidates[] = [(float) $hit[1][0], $hit[2][0], trim($hit[0][0]), $hit[1][1]];
+            }
+        }
+
+        // Temperature-word-anchored: "temperature of 39", "temp was 39.2", "fever of 40".
+        if (preg_match_all('/(?:temperature|temp|fever)\b[^0-9]{0,20}?(\d{2,3}(?:\.\d+)?)\s*°?\s*(celsius|fahrenheit|degrees?|c|f)?\b/u', $lower, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+            foreach ($matches as $hit) {
+                $candidates[] = [(float) $hit[1][0], $hit[2][0] ?? '', trim($hit[0][0]), $hit[1][1]];
+            }
+        }
+
+        $best = null;
+        $bestRaw = null;
+        foreach ($candidates as [$value, $unit, $raw, $numberOffset]) {
+            $celsius = $this->normaliseToCelsius($value, $unit);
+            if ($celsius === null) {
+                continue;
+            }
+            // Discard a candidate negated in its own clause ("not 39", "don't have
+            // a temperature of 39") so it can never contribute to $best. A later,
+            // non-negated candidate in the same message is still free to fire.
+            if ($this->isFeverNegatedBefore($lower, $numberOffset)) {
+                continue;
+            }
+            if ($best === null || $celsius > $best) {
+                $best = $celsius;
+                $bestRaw = $raw;
+            }
+        }
+
+        if ($best === null) {
+            return ['is_fever' => false, 'temp_c' => null, 'raw' => null];
+        }
+
+        return [
+            'is_fever' => $best >= self::FEVER_THRESHOLD_C,
+            'temp_c' => round($best, 1),
+            'raw' => $bestRaw,
+        ];
+    }
+
+    /**
+     * Normalise a parsed (value, unit) pair to degrees Celsius, or null if the
+     * value cannot be a plausible human body temperature. See detectFever() for
+     * the full contract.
+     */
+    private function normaliseToCelsius(float $value, string $unit): ?float
+    {
+        $unit = strtolower(trim($unit));
+
+        if ($unit === 'f' || $unit === 'fahrenheit') {
+            $celsius = ($value - 32) * 5 / 9;
+        } elseif ($value >= self::PLAUSIBLE_C_MIN && $value <= self::PLAUSIBLE_C_MAX) {
+            $celsius = $value;
+        } elseif ($value >= 90.0 && $value <= 113.0) {
+            // Only plausible as Fahrenheit — convert (fail-safe toward detection).
+            $celsius = ($value - 32) * 5 / 9;
+        } else {
+            return null;
+        }
+
+        if ($celsius < self::PLAUSIBLE_C_MIN || $celsius > self::PLAUSIBLE_C_MAX) {
+            return null;
+        }
+
+        return $celsius;
+    }
+
+    /**
+     * Detect an affirmative, unquantified fever report (PR #11 revision).
+     *
+     * Matches affirmative fever CONSTRUCTIONS (not the bare word 'fever') and rejects
+     * any match immediately preceded by a negation cue, so "I have a fever" escalates
+     * while "no fever", "denies fever", and "worried about a fever earlier but I feel
+     * fine now" do not. Callers only invoke this when no temperature was measured.
+     *
+     * @return array{is_fever: bool, raw: string|null}
+     */
+    private function detectQualitativeFever(string $lower): array
+    {
+        foreach (self::FEVER_AFFIRMATIVE_PATTERNS as $pattern) {
+            if (preg_match($pattern, $lower, $matches, PREG_OFFSET_CAPTURE)) {
+                $offset = $matches[0][1];
+                if (! $this->isFeverNegatedBefore($lower, $offset)) {
+                    return ['is_fever' => true, 'raw' => trim($matches[0][0])];
+                }
+            }
+        }
+
+        return ['is_fever' => false, 'raw' => null];
+    }
+
+    /**
+     * True when a negation cue appears anywhere in the CURRENT CLAUSE immediately
+     * before $offset — suppressing matches such as "I don't have a fever", "denies
+     * feeling feverish", or (numeric path) "my temperature is not 39".
+     *
+     * Clause-aware: the window before $offset is first trimmed back to the text
+     * after the LAST clause-boundary token (comma, semicolon, period, "but",
+     * "however", "yet", "although", "though"), then the whole of that trimmed
+     * clause is searched for a negation cue. Trimming to the last boundary (rather
+     * than stopping at the first negation cue found) matters when a clause has more
+     * than one candidate negation word: "no, my temperature is not 39" — "no"
+     * precedes the comma boundary and must NOT suppress, but "not" is in the same
+     * clause as the number and MUST suppress. Example that stays unsuppressed:
+     * "no headache, but I have a fever" — the "no" applies to headache; the comma +
+     * "but" boundary means the fever phrase's clause has no negation cue.
+     */
+    private function isFeverNegatedBefore(string $text, int $offset): bool
+    {
+        $start = max(0, $offset - self::FEVER_NEGATION_WINDOW);
+        $window = substr($text, $start, $offset - $start);
+
+        $clause = $window;
+        if (preg_match_all('/[,;.!?]|\b(?:but|however|yet|although|though)\b/', $window, $boundaries, PREG_OFFSET_CAPTURE)) {
+            $lastBoundary = end($boundaries[0]);
+            $clause = substr($window, $lastBoundary[1] + strlen($lastBoundary[0]));
+        }
+
+        return (bool) preg_match(self::FEVER_NEGATION_REGEX, $clause);
     }
 
     private function aiEvaluate(string $message, ?Visit $visit): array

@@ -2,6 +2,22 @@
 
 All notable changes to PostVisit.ai are documented here in reverse chronological order.
 
+## 2026-07-13
+
+### Fixed
+- **Escalation — clause-aware negation + comma-decimal temp (mission #1708, PR #11 revision 2)** —
+  two clinical false-negative defects flagged in shinny77's review comments (both fail-unsafe):
+  - `isFeverNegatedBefore()` had a blind 30-char negation window. *"no headache, but I have a fever"*
+    caused the `no` from the headache clause to suppress the affirmative fever match → missed escalation.
+    Fix: after a negation cue is found, a clause-boundary token (comma, semicolon, period, or
+    `but`/`however`/`yet`/`although`/`though`) between it and the fever phrase marks them as separate
+    clauses — the negation no longer suppresses. In-clause negations (*"I don't have a fever"*,
+    *"denies feeling feverish"*) are unaffected.
+  - European decimal-comma temperatures (*"38,5 degrees"*) were parsed as 38 °C (below threshold) →
+    genuine 38.5 °C fever silently missed. Normalise `\b(\d{2}),(\d{1,2})\b` → dot before regexes.
+  Regression tests added for both cases. **Do not merge** — clinical-safety change, awaits James's
+  sign-off on escalation wording and the 38.5 °C threshold.
+
 ## 2026-07-08
 
 ### Fixed
@@ -24,6 +40,20 @@ All notable changes to PostVisit.ai are documented here in reverse chronological
     matching generator entries). Assets still referenced by live code/tests
     (`demo/guidelines/**`, `public/data/apple-watch-alex.json`, `demo/transcript.txt`) were
     retained — grep evidence in the PR description.
+
+## 2026-07-07
+
+### Changed
+- **Escalation — affirmative qualitative-fever trigger (mission #1708, PR #11 revision)** —
+  an affirmative but unquantified fever report ("I have a fever", "feeling feverish",
+  "burning up", "high temperature") now escalates to critical even without a measured
+  temperature, prompting the patient to take their temperature. The trigger is
+  negation-aware: "no fever", "denies fever", "I don't have a fever", and
+  "temperature is fine" do not escalate, preserving the Task-1 numeric fix. When a
+  reading is given the numeric `>= 38.5C` comparison governs (a measured-but-normal value
+  does not escalate). Escalation is never gated on the patient owning a thermometer. Clinical
+  scope: `EscalationDetector` only; **do not merge** — awaits the treating clinician's
+  sign-off on escalation wording and the 38.5C threshold.
 
 ## 2026-07-05
 
