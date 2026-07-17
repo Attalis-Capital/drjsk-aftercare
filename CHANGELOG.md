@@ -2,6 +2,17 @@
 
 All notable changes to PostVisit.ai are documented here in reverse chronological order.
 
+## 2026-07-17
+
+### Documentation
+- **Revision audit — PR #11 review 4643178382 (mission #1819)** — produced
+  `missions/1819/revision-response.md` verifying that all 14 CHANGES_REQUESTED
+  items from shinny77's review are satisfied in merged `main` (merge commit
+  `080c291`). Addresses four Council modifications: Deliverables field legend (P1),
+  self-reference exemption with §P3 verbatim (P2), item-by-item count reconciliation
+  (P3), and a review-binding verification token (P4). No net-new code change — the
+  reviewed surface was fully resolved before this revision was picked up.
+
 ## 2026-07-13
 
 ### Fixed
